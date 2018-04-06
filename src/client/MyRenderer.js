@@ -1,31 +1,44 @@
+/*
+    Information: Test Build
+*/
+
 'use strict';
 
 import isNode from 'detect-node'
 if (!isNode) {                                                                                                                                                                                        
     //require('phaser');
     require('phaser/dist/phaser');
+    //require('phaser/dist/phaser-arcade-physics');
 }
 //import 'phaser';
-//import Renderer from 'lance/render/pixi/PixiRenderer';
+
 import Renderer from './PhaserRenderer';
 
 export default class MyRenderer extends Renderer {
 
-    get ASSETPATHS(){
-        return {
-            //ship: 'assets/ship1.png'
-            //,missile: 'assets/shot.png'
-            //,bg1: 'assets/space3.png'
-            //,bg2: 'assets/space2.png'
-            //,bg3: 'assets/clouds2.png'
-            //,bg4: 'assets/clouds1.png'
-            //,smokeParticle: 'assets/smokeparticle.png'
-        };
-    }
-
     constructor(gameEngine, clientEngine) {
         super(gameEngine, clientEngine);
         this.sprites = {};
+
+        //Phaser config game 
+        //this.config = {};
+
+        this.config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 200 }
+                }
+            },
+            scene: {
+                preload: this.preload,
+                create: this.create
+            }
+        };
+        
         //console.log(this);
     }
     //Phaser
@@ -50,13 +63,11 @@ export default class MyRenderer extends Renderer {
             blendMode: 'ADD'
         });
     
-        //var logo = this.physics.add.image(400, 100, 'logo');
-    
-        //logo.setVelocity(100, 200);
-        //logo.setBounce(1, 1);
-        //logo.setCollideWorldBounds(true);
-    
-        //emitter.startFollow(logo);
+        var logo = this.physics.add.image(400, 100, 'logo');
+        logo.setVelocity(100, 200);
+        logo.setBounce(1, 1);
+        logo.setCollideWorldBounds(true);
+        emitter.startFollow(logo);
     }
     //Phaser
     update(){
@@ -69,10 +80,14 @@ export default class MyRenderer extends Renderer {
 
     addObject(obj) {
         super.addObject(obj);
+
+
     }
 
     removeObject(obj) {
         super.removeObject(obj);
+
+
     }
 
 }

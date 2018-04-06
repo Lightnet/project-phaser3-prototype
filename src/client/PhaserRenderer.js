@@ -1,3 +1,6 @@
+/*
+    Information: Default build for Phaser Renderer Class
+*/
 
 //import isNode from 'detect-node'
 //if (!isNode) {                                                                                                                                                                                        
@@ -12,15 +15,6 @@ import Renderer from 'lance/render/Renderer';
 
 export default class PhaserRenderer extends Renderer {
 
-    /**
-     * Returns a dictionary of image assets and their paths
-     * E.G. {
-                ship: 'assets/ship.png',
-                missile: 'assets/missile.png',
-            }
-     * @returns {{}}
-     * @constructor
-     */
     get ASSETPATHS() {
         return {};
     }
@@ -39,7 +33,7 @@ export default class PhaserRenderer extends Renderer {
 
         this.viewportWidth = window.innerWidth;
         this.viewportHeight = window.innerHeight;
-
+        /*
         this.config = {
             type: Phaser.AUTO,
             width: 800,
@@ -50,6 +44,7 @@ export default class PhaserRenderer extends Renderer {
                 update: this.update
             }
         };
+        */
 
         if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
             this.onDOMLoaded();
@@ -86,6 +81,11 @@ export default class PhaserRenderer extends Renderer {
     onDOMLoaded() {
         this.game = new Phaser.Game(this.config);
         console.log(this.game);
+        //Phaser.Physics.ARCADE
+        //Phaser.Physics.Impact
+        //Phaser.Physics.Matter
+
+        console.log(Phaser.Physics);
     }
 
     preload(){
@@ -102,9 +102,7 @@ export default class PhaserRenderer extends Renderer {
 
     draw() {
         super.draw();
-
         if (!this.isReady) return; // assets might not have been loaded yet
-
         //for (let objId of Object.keys(this.sprites)) {
             //let objData = this.gameEngine.world.objects[objId];
             //let sprite = this.sprites[objId];
@@ -115,11 +113,11 @@ export default class PhaserRenderer extends Renderer {
                 //sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
             //}
         //}
-
         //this.renderer.render(this.stage);
     }
 
     addObject(obj) {
+        super.addObject(obj);
         //if (obj.hasComponent(PixiRenderableComponent)){
             //let renderable = obj.getComponent(PixiRenderableComponent);
             //let sprite = this.sprites[obj.id] = renderable.createRenderable();
@@ -130,6 +128,7 @@ export default class PhaserRenderer extends Renderer {
     }
 
     removeObject(obj) {
+        super.removeObject(obj);
         //if (obj.hasComponent(PixiRenderableComponent)){
             //let sprite = this.sprites[obj.id];
             //if (sprite) {
