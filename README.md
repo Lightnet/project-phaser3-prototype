@@ -8,22 +8,27 @@
 # License: MIT
 
 # Information:
- Phaser 3.3.0, Lance-gg 2.0.5, Nodejs
+ Phaser 3.3.0, Lance-gg 2.0.5, and Nodejs 8.11.1 is for game client and server build.
+ 
+ Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 multiplayer. Working on simple template builds.
+
+ Not sure if Phaser physics server side for nodejs hasn't been tested yet. Lance-gg network has another way to for 2D collision. Note it may required different way to code it since render the game for Phaser doesn't work on server nodejs since it required window and other objects to run headless is not possible. (It is possible but it required more R&D using more packages.)
+  
+ This is just a test build.
 
 # Notes:
  * Some files are from Phaser 3.3.0 Github Examples for testing.
+ * Phaser 3.3.0 physics server code have not yet work or tested to sync with client and server node of other framework engines.
+ * Work in progress.
 
-# Information: 
-  Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 multiplayer. Just add simple render and not add and remove object yet.
 
-  Phaser physics server side doens't work but depend on the npm lance-gg as another way to for 2D collision. This is just a test build.
-
-# Packages /Programs:
- * Nodejs 8.11.1 (run server)
+# Packages / Programs:
+ * Viusal Studio Code 1.22.1 (IDE)
+ * Nodejs 8.11.1 (run server and auto build script with gulp)
  * Phaser 3.3.0 (Note this is typescript and javascript from package npm)
  * Babel 6.26.0 (gulp auto build script for server and browser)
- * Gulp 3.9.1
- * Lance-gg 2.0.5
+ * Gulp 3.9.1 (auto task build scripts)
+ * Lance-gg 2.0.5 (Multiplayer Network for client and server engine or framework design)
 
 # install:
  * npm install
