@@ -24,6 +24,7 @@ export default class MyClientEngine extends ClientEngine {
         });
 
     }
+    
     start() {
         super.start();
 
@@ -51,7 +52,4 @@ export default class MyClientEngine extends ClientEngine {
             }
         });
     }
-
-
-
 }

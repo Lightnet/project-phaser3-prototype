@@ -100,8 +100,8 @@ export default class PhaserRenderer extends Renderer {
 
     }
 
-    draw() {
-        super.draw();
+    draw(t, dt) {
+        super.draw(t, dt);
         if (!this.isReady) return; // assets might not have been loaded yet
         //for (let objId of Object.keys(this.sprites)) {
             //let objData = this.gameEngine.world.objects[objId];

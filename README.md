@@ -8,7 +8,7 @@
 # License: MIT
 
 # Information:
- Phaser 3.3.0, Lance-gg 2.0.5, and Nodejs 8.11.1 is for game client and server build.
+ Phaser 3.3.0, Lance-gg 2.0.5, and Nodejs 8.11.1 is for multiplayer game client and server build.
  
  Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 multiplayer. Working on simple template builds.
 
@@ -19,6 +19,7 @@
 # Notes:
  * Some files are from Phaser 3.3.0 Github Examples for testing.
  * Phaser 3.3.0 physics server code have not yet work or tested to sync with client and server node of other framework engines.
+ * Testing seem slow if bundle.js file is taking long time for chrome.
  * Work in progress.
 
 

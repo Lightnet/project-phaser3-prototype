@@ -4,11 +4,28 @@ import express from 'express';
 import socketIO from 'socket.io';
 import path from 'path';
 
+const csp = require('express-csp-header');
+
 const PORT = process.env.PORT || 8080;
 const INDEX = path.join(__dirname, '../index.html');
 
 // define routes and socket
 const server = express();
+
+server.use(csp({
+    policies: {
+        'default-src': [csp.NONE],
+		'script-src': [csp.NONCE],
+		'style-src': [csp.NONCE],
+		'img-src': [csp.SELF],
+		'font-src': [csp.NONCE, 'fonts.gstatic.com'],
+		'object-src': [csp.NONE],
+		'block-all-mixed-content': true,
+		'frame-ancestors': [csp.NONE]
+    }
+}));
+
+
 server.get('/', function(req, res) { res.sendFile(INDEX); });
 //server.use('/', express.static(path.join(__dirname, '.')));
 server.use('/', express.static(path.join(__dirname, '../public')));

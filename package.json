@@ -10,10 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
+    "express-csp-header": "^2.2.0",
+    "lance-gg": "^2.0.5",
     "phaser": "^3.3.0",
     "pixi.js": "^4.7.3",
     "query-string": "^6.0.0",
-    "lance-gg": "^2.0.5",
     "socket.io": "^2.1.0"
   },
   "devDependencies": {

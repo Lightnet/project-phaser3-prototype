@@ -80,8 +80,8 @@ export default class MyRenderer extends Renderer {
         super.update();
     }
 
-    draw() {
-        super.draw();
+    draw(t, dt) {
+        super.draw(t, dt);
         //console.log("draw?");
 
         let now = Date.now();
@@ -158,7 +158,6 @@ export default class MyRenderer extends Renderer {
     }
 
     updateScore(data){
-
 
     }
 
