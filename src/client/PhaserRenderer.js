@@ -34,6 +34,7 @@ export default class PhaserRenderer extends Renderer {
         this.viewportWidth = window.innerWidth;
         this.viewportHeight = window.innerHeight;
         /*
+        //ignore since it could override config. This is test.
         this.config = {
             type: Phaser.AUTO,
             width: 800,
@@ -80,7 +81,7 @@ export default class PhaserRenderer extends Renderer {
 
     onDOMLoaded() {
         this.game = new Phaser.Game(this.config);
-        console.log(this.game);
+        //console.log(this.game);
         //Phaser.Physics.ARCADE
         //Phaser.Physics.Impact
         //Phaser.Physics.Matter

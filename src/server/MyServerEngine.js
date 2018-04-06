@@ -20,7 +20,7 @@ export default class MyServerEngine extends ServerEngine {
             //player2: null
         //};
 
-        this.makeBot();
+        //this.makeBot();
     }
 
     onPlayerConnected(socket) {
@@ -36,7 +36,7 @@ export default class MyServerEngine extends ServerEngine {
             //this.updateScore();
         };
 
-        //makePlayerShip();
+        makePlayerShip();
 
         // handle client restart requests
         //socket.on('requestRestart', makePlayerShip);

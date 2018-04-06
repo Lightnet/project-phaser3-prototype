@@ -7,6 +7,9 @@
 
 # License: MIT
 
+# Information:
+ Phaser 3.3.0, Lance-gg 2.0.5, Nodejs
+
 # Notes:
  * Some files are from Phaser 3.3.0 Github Examples for testing.
 
@@ -39,3 +42,6 @@
  * https://github.com/photonstorm/phaser3-examples/tree/master/public/src/physics/matterjs
  * https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_breakout_game_Phaser/Physics
  * https://phaser.io/tutorials/getting-started-phaser3/part5
+
+# Phaser Assets: 
+ * https://github.com/photonstorm/phaser3-examples/tree/master/public

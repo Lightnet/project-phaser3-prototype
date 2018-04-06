@@ -26,7 +26,6 @@ export default class MyGameEngine extends GameEngine {
     registerClasses(serializer) {
         //serializer.registerClass(Paddle);
         //serializer.registerClass(Ball);
-
         serializer.registerClass(Ship);
     }
 
@@ -133,13 +132,14 @@ export default class MyGameEngine extends GameEngine {
             playerId: playerId,
             instanceType: Ship
         });
-
-        console.log(inputData.input);
+        //console.log(playerShip.position);
+        //console.log(inputData.input);
 
         if (playerShip) {
             if (inputData.input == 'up') {
                 playerShip.isAccelerating = true;
                 playerShip.showThrust = 5; // show thrust for next steps.
+                //console.log(playerShip);
             } else if (inputData.input == 'right') {
                 playerShip.isRotatingRight = true;
             } else if (inputData.input == 'left') {
@@ -150,7 +150,6 @@ export default class MyGameEngine extends GameEngine {
                 //this.emit('fireMissile');
             }
         }
-
 
         // get the player paddle tied to the player socket
         //let playerPaddle = this.world.queryObject({ playerId });

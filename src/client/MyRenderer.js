@@ -12,6 +12,8 @@ if (!isNode) {
 }
 //import 'phaser';
 
+import Ship from '../common/Ship';
+
 import Renderer from './PhaserRenderer';
 
 export default class MyRenderer extends Renderer {
@@ -27,12 +29,12 @@ export default class MyRenderer extends Renderer {
             type: Phaser.AUTO,
             width: 800,
             height: 600,
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    gravity: { y: 200 }
-                }
-            },
+            //physics: {
+                //default: 'arcade',
+                //arcade: {
+                    //gravity: { y: 200 }
+                //}
+            //},
             scene: {
                 preload: this.preload,
                 create: this.create
@@ -45,7 +47,7 @@ export default class MyRenderer extends Renderer {
     preload(){
         super.preload();
         this.load.setBaseURL('http://localhost:3000/');
-
+        this.load.image('ship', 'assets/sprites/asteroids_ship.png');
         this.load.image('sky', 'assets/skies/space3.png');
         this.load.image('logo', 'assets/sprites/phaser3-logo.png');
         this.load.image('red', 'assets/particles/red.png');
@@ -53,8 +55,11 @@ export default class MyRenderer extends Renderer {
     //Phaser
     create(){
         super.create();
-        this.add.image(400, 300, 'sky');
+        //console.log("create");
+        //console.log(this);
+        //this.add.image(400, 300, 'sky');
 
+        /*
         var particles = this.add.particles('red');
     
         var emitter = particles.createEmitter({
@@ -62,12 +67,13 @@ export default class MyRenderer extends Renderer {
             scale: { start: 1, end: 0 },
             blendMode: 'ADD'
         });
-    
+        
         var logo = this.physics.add.image(400, 100, 'logo');
         logo.setVelocity(100, 200);
         logo.setBounce(1, 1);
         logo.setCollideWorldBounds(true);
         emitter.startFollow(logo);
+        */
     }
     //Phaser
     update(){
@@ -76,18 +82,61 @@ export default class MyRenderer extends Renderer {
 
     draw() {
         super.draw();
+        //console.log("draw?");
+
+        let now = Date.now();
+
+        for (let objId of Object.keys(this.sprites)) {
+            let objData = this.gameEngine.world.objects[objId];
+            let sprite = this.sprites[objId];
+
+            if (objData) {
+                sprite.x = objData.position.x;
+                sprite.y = objData.position.y;
+            }
+
+            if (objData instanceof Ship){
+                //sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+            } else{
+                sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+            }
+
+            if (sprite) {
+                // object is either a Pixi sprite or an Actor. Actors have renderSteps
+                if (sprite.actor && sprite.actor.renderStep) {
+                    sprite.actor.renderStep(now - this.elapsedTime);
+                }
+            }
+        }
+
+        this.elapsedTime = now;
     }
 
     addObject(obj) {
         super.addObject(obj);
-
-
+        console.log("renderer add object");
+        //console.log(obj);
     }
 
     removeObject(obj) {
         super.removeObject(obj);
-
-
+        console.log("renderer remove object");
     }
+    addPlayerShip(sprite) {
+        this.playerShip = sprite;
+        /*
+        document.body.classList.remove('lostGame');
+        if (!document.body.classList.contains('tutorialDone')){
+            document.body.classList.add('tutorial');
+        }
+        document.body.classList.remove('lostGame');
+        document.body.classList.add('gameActive');
+        document.querySelector('#tryAgain').disabled = true;
+        document.querySelector('#joinGame').disabled = true;
+        document.querySelector('#joinGame').style.opacity = 0;
+        */
 
+        this.gameStarted = true; // todo state shouldn't be saved in the renderer
+    }
 }
