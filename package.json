@@ -13,6 +13,7 @@
     "phaser": "^3.3.0",
     "pixi.js": "^4.7.3",
     "query-string": "^6.0.0",
+    "lance-gg": "^2.0.5",
     "socket.io": "^2.1.0"
   },
   "devDependencies": {
@@ -41,7 +42,6 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^4.0.2",
     "gulp-uglify": "^3.0.0",
-    "lance-gg": "^2.0.5",
     "uglifyify": "^4.0.5",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
