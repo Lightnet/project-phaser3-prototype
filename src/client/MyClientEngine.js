@@ -1,6 +1,12 @@
+/*
+ Information: Game Client Setup
+*/
+
+
 import ClientEngine from 'lance-gg/ClientEngine';
 import KeyboardControls from 'lance-gg/controls/KeyboardControls';
 import MyRenderer from '../client/MyRenderer';
+import Utils from '../common/Utils';
 
 export default class MyClientEngine extends ClientEngine {
 
@@ -18,4 +24,34 @@ export default class MyClientEngine extends ClientEngine {
         });
 
     }
+    start() {
+        super.start();
+
+        this.networkMonitor.on('RTTUpdate', (e) => {
+            this.renderer.updateHUD(e);
+        });
+    }
+
+    // extend ClientEngine connect to add own events
+    connect() {
+        return super.connect().then(() => {
+            this.socket.on('scoreUpdate', (e) => {
+                this.renderer.updateScore(e);
+            });
+
+            this.socket.on('disconnect', (e) => {
+                console.log('disconnected');
+                //document.body.classList.add('disconnected');
+                //document.body.classList.remove('gameActive');
+                //document.querySelector('#reconnect').disabled = false;
+            });
+
+            if ('autostart' in Utils.getUrlVars()) {
+                this.socket.emit('requestRestart');
+            }
+        });
+    }
+
+
+
 }

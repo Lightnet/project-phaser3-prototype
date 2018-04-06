@@ -11,10 +11,10 @@ if (!isNode) {
     //require('phaser/dist/phaser-arcade-physics');
 }
 //import 'phaser';
+import Utils from './../common/Utils';
+import Renderer from './PhaserRenderer';
 
 import Ship from '../common/Ship';
-
-import Renderer from './PhaserRenderer';
 
 export default class MyRenderer extends Renderer {
 
@@ -99,7 +99,9 @@ export default class MyRenderer extends Renderer {
                 //sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                 sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
             } else{
-                sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                if(this.gameEngine.world.objects[objId] !=null){
+                    sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                }
             }
 
             if (sprite) {
@@ -121,8 +123,13 @@ export default class MyRenderer extends Renderer {
 
     removeObject(obj) {
         super.removeObject(obj);
-        console.log("renderer remove object");
+        //console.log(this.sprites);
+        //console.log(obj);
+        //console.log("renderer remove object");
+        //this.sprites[obj.id].destroy();
+        //delete this.sprites[obj.id];
     }
+
     addPlayerShip(sprite) {
         this.playerShip = sprite;
         /*
@@ -139,4 +146,20 @@ export default class MyRenderer extends Renderer {
 
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
     }
+
+    removeOffscreenIndicator(objData) {
+        //let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
+        //if (indicatorEl && indicatorEl.parentNode)
+            //indicatorEl.parentNode.removeChild(indicatorEl);
+    }
+
+    updateHUD(data){
+
+    }
+
+    updateScore(data){
+
+
+    }
+
 }

@@ -46,7 +46,25 @@ export default class Ship extends DynamicObject {
     onRemoveFromWorld(gameEngine) {
         let renderer = Renderer.getInstance();
         if (renderer) {
-
+            if (gameEngine.isOwnedByPlayer(this)) {
+                renderer.playerShip = null;
+            } else {
+                //renderer.removeOffscreenIndicator(this);
+            }
+            let sprite = renderer.sprites[this.id];
+            if (sprite) {
+                if (sprite.actor) {
+                    // removal "takes time"
+                    sprite.actor.destroy().then(()=>{
+                        console.log('deleted sprite actor');
+                        delete renderer.sprites[this.id];
+                    });
+                } else {
+                    console.log('deleted sprite');
+                    sprite.destroy();
+                    delete renderer.sprites[this.id];
+                }
+            }
         }
     }
 

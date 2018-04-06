@@ -26,7 +26,12 @@ var TRACE = Trace.TRACE_DEBUG
 // Game Instances
 //const gameEngine = new MyGameEngine({ traceLevel: Trace.TRACE_NONE });
 const gameEngine = new MyGameEngine({ traceLevel: TRACE });
-const serverEngine = new MyServerEngine(io, gameEngine, { debug: {}, updateRate: 6, tracesPath: './logs' });
+const serverEngine = new MyServerEngine(io, gameEngine, { 
+    debug: {}
+    ,updateRate: 6
+    ,tracesPath: './logs'
+    ,timeoutInterval: 0 // no timeout
+});
 
 // start the game
 serverEngine.start();
