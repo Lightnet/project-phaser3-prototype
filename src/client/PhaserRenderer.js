@@ -85,8 +85,7 @@ export default class PhaserRenderer extends Renderer {
         //Phaser.Physics.ARCADE
         //Phaser.Physics.Impact
         //Phaser.Physics.Matter
-
-        console.log(Phaser.Physics);
+        //console.log(Phaser.Physics);
     }
 
     preload(){

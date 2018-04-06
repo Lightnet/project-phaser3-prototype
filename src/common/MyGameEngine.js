@@ -67,7 +67,7 @@ export default class MyGameEngine extends GameEngine {
     }
 
     makeShip(playerId){
-        let ship = new Ship(this, null, {position: new TwoVector(10, 5)});
+        let ship = new Ship(this, null, {position: new TwoVector(200, 200)});
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
         console.log(`ship added: ${ship.toString()}`);

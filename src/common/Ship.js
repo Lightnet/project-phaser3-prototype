@@ -29,7 +29,7 @@ export default class Ship extends DynamicObject {
             let sprite = shipActor.sprite;
             renderer.sprites[this.id] = sprite;
             sprite.id = this.id;
-            console.log(sprite);
+            //console.log(sprite);
 
             //sprite.position.set(this.position.x, this.position.y);
             //renderer.layer2.addChild(sprite);
