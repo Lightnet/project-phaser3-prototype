@@ -5,9 +5,13 @@
 
 # Created by: Lightnet
 
+# License: MIT
+
+# Notes:
+ * Some files are from Phaser 3.3.0 Github Examples for testing.
+
 # Information: 
   Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 multiplayer. Just add simple render and not add and remove object yet.
-
 
 # Packages /Programs:
  * Nodejs 8.11.1 (run server)
@@ -28,3 +32,4 @@
  * https://phaser.io/news/2015/05/ezgui
  * http://www.phaser.io/news/2017/08/phaser-ui-package
  * https://phaser.io/tutorials/making-your-first-phaser-3-game
+ * 
