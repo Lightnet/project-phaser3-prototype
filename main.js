@@ -11,7 +11,7 @@ const INDEX = path.join(__dirname, '../index.html');
 
 // define routes and socket
 const server = express();
-
+/*
 server.use(csp({
     policies: {
         'default-src': [csp.NONE],
@@ -24,7 +24,7 @@ server.use(csp({
 		'frame-ancestors': [csp.NONE]
     }
 }));
-
+*/
 
 server.get('/', function(req, res) { res.sendFile(INDEX); });
 //server.use('/', express.static(path.join(__dirname, '.')));

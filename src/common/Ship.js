@@ -13,6 +13,7 @@ export default class Ship extends DynamicObject {
         super(gameEngine, options, props);
         this.showThrust = 0;
         this.isBot = false;
+        this.angle = 0;
         //console.log("options");
         //console.log(options);
         //console.log(props);
@@ -30,16 +31,15 @@ export default class Ship extends DynamicObject {
             renderer.sprites[this.id] = sprite;
             sprite.id = this.id;
             //console.log(sprite);
-
             //sprite.position.set(this.position.x, this.position.y);
-            //renderer.layer2.addChild(sprite);
+            sprite.setX(this.position.x);
+            sprite.setY(this.position.y);
 
             if (gameEngine.isOwnedByPlayer(this)) {
-                //renderer.addPlayerShip(sprite);
+                renderer.addPlayerShip(sprite);
             } else {
-                //renderer.addOffscreenIndicator(this);
+                renderer.addOffscreenIndicator(this);
             }
-
         }
     }
 
@@ -49,7 +49,7 @@ export default class Ship extends DynamicObject {
             if (gameEngine.isOwnedByPlayer(this)) {
                 renderer.playerShip = null;
             } else {
-                //renderer.removeOffscreenIndicator(this);
+                renderer.removeOffscreenIndicator(this);
             }
             let sprite = renderer.sprites[this.id];
             if (sprite) {
@@ -84,6 +84,7 @@ export default class Ship extends DynamicObject {
     }
 
     destroy() {
+        
     }
 
     attachAI() {
@@ -153,5 +154,4 @@ export default class Ship extends DynamicObject {
 
         }
     }
-
 }

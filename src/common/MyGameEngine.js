@@ -5,6 +5,7 @@ import TwoVector from 'lance/serialize/TwoVector';
 //import Ball from './Ball';
 
 import Ship from './Ship';
+import Missile from './Missile';
 
 const PADDING = 20;
 const WIDTH = 400;
@@ -14,7 +15,7 @@ const PADDLE_HEIGHT = 50;
 
 import GameEngine from 'lance/GameEngine';
 import SimplePhysicsEngine from 'lance/physics/SimplePhysicsEngine';
-import PlayerAvatar from './PlayerAvatar';
+//import PlayerAvatar from './PlayerAvatar';
 
 export default class MyGameEngine extends GameEngine {
 
@@ -27,6 +28,7 @@ export default class MyGameEngine extends GameEngine {
         //serializer.registerClass(Paddle);
         //serializer.registerClass(Ball);
         serializer.registerClass(Ship);
+        serializer.registerClass(Missile);
     }
 
     start() {
@@ -62,7 +64,7 @@ export default class MyGameEngine extends GameEngine {
         let ship = new Ship(this, null, {position: new TwoVector(5, 5)});
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
-        console.log(`ship added: ${ship.toString()}`);
+        //console.log(`ship added: ${ship.toString()}`);
         return ship;
     }
 
@@ -70,7 +72,7 @@ export default class MyGameEngine extends GameEngine {
         let ship = new Ship(this, null, {position: new TwoVector(200, 200)});
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
-        console.log(`ship added: ${ship.toString()}`);
+        //console.log(`ship added: ${ship.toString()}`);
         return ship;
     }
 

@@ -29,6 +29,7 @@ export default class MyRenderer extends Renderer {
             type: Phaser.AUTO,
             width: 800,
             height: 600,
+            parent	: 'phaser-app',
             //physics: {
                 //default: 'arcade',
                 //arcade: {
@@ -43,6 +44,56 @@ export default class MyRenderer extends Renderer {
         
         //console.log(this);
     }
+
+    init() {
+        super.init();
+        
+
+        return this.initPromise;
+    }
+
+    onDOMLoaded() {
+        super.onDOMLoaded();
+        this.gameEngine.emit('renderer.ready');
+        window.addEventListener('resize', ()=>{ this.setRendererSize(); });
+        console.log(this.game);
+        //this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        //this.game.scale.setShowAll();
+    }
+
+    setRendererSize() {
+        this.viewportWidth = window.innerWidth;
+        this.viewportHeight = window.innerHeight;
+        console.log("resize");
+        //window.addEventListener('resize', function () {
+            //this.game.scale.refresh();
+        //});
+        //this.game.scale.refresh();
+        //this.renderer.resize(this.viewportWidth, this.viewportHeight);
+        this.resizeApp();
+    }
+
+    // Resize
+    resizeApp(){
+	    //var div = document.getElementById('phaser-app');
+	    //div.style.width = window.innerHeight * 0.6;
+        //div.style.height = window.innerHeight;
+        
+        var canvas = document.querySelector("canvas");
+        var windowWidth = window.innerWidth;
+        var windowHeight = window.innerHeight;
+        var windowRatio = windowWidth / windowHeight;
+        var gameRatio = this.game.config.width / this.game.config.height;
+        if(windowRatio < gameRatio){
+            canvas.style.width = windowWidth + "px";
+            canvas.style.height = (windowWidth / gameRatio) + "px";
+        }
+        else{
+            canvas.style.width = (windowHeight * gameRatio) + "px";
+            canvas.style.height = windowHeight + "px";
+        }
+    }
+
     //Phaser
     preload(){
         super.preload();
@@ -147,6 +198,14 @@ export default class MyRenderer extends Renderer {
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
     }
 
+    addOffscreenIndicator(objData) {
+        //let container = document.querySelector('#offscreenIndicatorContainer');
+        //let indicatorEl = document.createElement('div');
+        //indicatorEl.setAttribute('id', 'offscreenIndicator' + objData.id);
+        //indicatorEl.classList.add('offscreenIndicator');
+        //container.appendChild(indicatorEl);
+    }
+
     removeOffscreenIndicator(objData) {
         //let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
         //if (indicatorEl && indicatorEl.parentNode)
@@ -162,3 +221,24 @@ export default class MyRenderer extends Renderer {
     }
 
 }
+
+
+// convenience function
+function qs(selector) { return document.querySelector(selector);}
+
+function truncateDecimals(number, digits) {
+    let multiplier = Math.pow(10, digits);
+    let adjustedNum = number * multiplier;
+    let truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+
+    return truncatedNum / multiplier;
+};
+
+function isMacintosh() {
+    return navigator.platform.indexOf('Mac') > -1;
+}
+
+function isWindows() {
+    return navigator.platform.indexOf('Win') > -1;
+}
+

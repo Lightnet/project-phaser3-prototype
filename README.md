@@ -48,6 +48,7 @@
  * https://github.com/photonstorm/phaser3-examples/tree/master/public/src/physics/matterjs
  * https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_breakout_game_Phaser/Physics
  * https://phaser.io/tutorials/getting-started-phaser3/part5
+ * http://browsergameshub.com/phaser3-lessons-and-code-pt1/#direct-1
 
 # Phaser Assets: 
  * https://github.com/photonstorm/phaser3-examples/tree/master/public
