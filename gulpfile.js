@@ -18,6 +18,8 @@ var browserSync = require('browser-sync').create();
 var browserify = require('browserify');
 var transform = require('vinyl-transform');
 
+var sass = require('gulp-sass');
+
 /* pathConfig*/
 var entryPoint = './src/client/clientEntryPoint.js';//,
 var outPutBrowser = "public/**/*.*";
@@ -221,6 +223,12 @@ gulp.task('browser-sync',['serve'], function() {
         //,browser: 'firefox'
     });
 });
+
+gulp.task('sass', function () {
+    return gulp.src('assets/sass/*.scss')
+      .pipe(sass().on('error', sass.logError))
+      .pipe(gulp.dest('public/assets/css'));
+  });
 
 //default auto start
 gulp.task('default',['assets','html','build','watch'],()=>{

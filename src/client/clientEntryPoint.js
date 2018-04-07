@@ -1,5 +1,7 @@
 //console.log("game client!");
 
+//import '../../assets/sass/main.scss';
+
 import querystring from 'query-string';
 import MyClientEngine from '../client/MyClientEngine';
 import MyGameEngine from '../common/MyGameEngine';

@@ -56,3 +56,7 @@
 
 # Phaser Assets: 
  * https://github.com/photonstorm/phaser3-examples/tree/master/public
+
+
+# npm:
+ * gulp-sass required node-sass to work.

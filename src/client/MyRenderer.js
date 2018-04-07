@@ -29,7 +29,7 @@ export default class MyRenderer extends Renderer {
             type: Phaser.AUTO,
             width: 800,
             height: 600,
-            parent	: 'phaser-app',
+            parent	: 'phaser-app',//Id of the containing DOM-Element.
             //physics: {
                 //default: 'arcade',
                 //arcade: {
