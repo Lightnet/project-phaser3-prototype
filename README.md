@@ -22,6 +22,10 @@
  * Testing seem slow if bundle.js file is taking long time for chrome.
  * Work in progress.
 
+# Browser notes:
+ * Chrome Content Security Policy and image tends to break and it the express server is setup for dev.
+ * Firefox work fine.
+
 
 # Packages / Programs:
  * Viusal Studio Code 1.22.1 (IDE)
