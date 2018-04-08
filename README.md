@@ -16,6 +16,8 @@
   
  This is just a test build.
 
+ Porting [spaace](https://github.com/lance-gg/spaaace) pixi.js > phaser 3.3.0 Frameworks.
+
 # Notes:
  * Some files are from Phaser 3.3.0 Github Examples for testing.
  * Phaser 3.3.0 physics server code have not yet work or tested to sync with client and server node of other framework engines.
@@ -25,7 +27,6 @@
 # Browser notes:
  * Chrome Content Security Policy and image tends to break and it the express server is setup for dev.
  * Firefox work fine.
-
 
 # Packages / Programs:
  * Viusal Studio Code 1.22.1 (IDE)

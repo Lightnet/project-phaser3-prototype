@@ -27,6 +27,11 @@
             "type": "gulp",
             "task": "sass",
             "problemMatcher": []
+        },
+        {
+            "type": "gulp",
+            "task": "assets",
+            "problemMatcher": []
         }
     ]
 }

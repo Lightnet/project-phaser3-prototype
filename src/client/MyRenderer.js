@@ -16,6 +16,8 @@ import Renderer from './PhaserRenderer';
 
 import Ship from '../common/Ship';
 
+
+
 export default class MyRenderer extends Renderer {
 
     constructor(gameEngine, clientEngine) {
@@ -41,35 +43,24 @@ export default class MyRenderer extends Renderer {
                 create: this.create
             }
         };
-        
         //console.log(this);
+        //this.gameEngine.emit('renderer.ready');
     }
 
     init() {
-        super.init();
-        
+        let p = super.init();
 
-        return this.initPromise;
-    }
-
-    onDOMLoaded() {
-        super.onDOMLoaded();
-        this.gameEngine.emit('renderer.ready');
         window.addEventListener('resize', ()=>{ this.setRendererSize(); });
+        this.resizeApp();
         console.log(this.game);
-        //this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        //this.game.scale.setShowAll();
+        this.gameEngine.emit('renderer.ready');
+        return p; // eslint-disable-line new-cap
     }
 
     setRendererSize() {
-        this.viewportWidth = window.innerWidth;
-        this.viewportHeight = window.innerHeight;
+        //this.viewportWidth = window.innerWidth;
+        //this.viewportHeight = window.innerHeight;
         console.log("resize");
-        //window.addEventListener('resize', function () {
-            //this.game.scale.refresh();
-        //});
-        //this.game.scale.refresh();
-        //this.renderer.resize(this.viewportWidth, this.viewportHeight);
         this.resizeApp();
     }
 
@@ -78,6 +69,8 @@ export default class MyRenderer extends Renderer {
 	    //var div = document.getElementById('phaser-app');
 	    //div.style.width = window.innerHeight * 0.6;
         //div.style.height = window.innerHeight;
+
+        var guiContainer = document.querySelector("#guiContainer");
         
         var canvas = document.querySelector("canvas");
         var windowWidth = window.innerWidth;
@@ -87,38 +80,45 @@ export default class MyRenderer extends Renderer {
         if(windowRatio < gameRatio){
             canvas.style.width = windowWidth + "px";
             canvas.style.height = (windowWidth / gameRatio) + "px";
+
+            guiContainer.style.width = canvas.style.width;
+            guiContainer.style.height = canvas.style.height;
         }
         else{
             canvas.style.width = (windowHeight * gameRatio) + "px";
             canvas.style.height = windowHeight + "px";
+
+            guiContainer.style.width = canvas.style.width;
+            guiContainer.style.height = canvas.style.height;
         }
     }
 
     //Phaser
     preload(){
-        super.preload();
         this.load.setBaseURL('http://localhost:3000/');
         this.load.image('ship', 'assets/sprites/asteroids_ship.png');
         this.load.image('sky', 'assets/skies/space3.png');
         this.load.image('logo', 'assets/sprites/phaser3-logo.png');
         this.load.image('red', 'assets/particles/red.png');
     }
+
     //Phaser
     create(){
-        super.create();
+        let render = MyRenderer.getInstance();
+        //render.setReady();
+        render.gameEngine.emit('renderer.ready');
+        console.log(render.gameEngine);
+        //this.setReady();
         //console.log("create");
         //console.log(this);
         //this.add.image(400, 300, 'sky');
-
         /*
         var particles = this.add.particles('red');
-    
         var emitter = particles.createEmitter({
             speed: 100,
             scale: { start: 1, end: 0 },
             blendMode: 'ADD'
         });
-        
         var logo = this.physics.add.image(400, 100, 'logo');
         logo.setVelocity(100, 200);
         logo.setBounce(1, 1);
@@ -128,7 +128,7 @@ export default class MyRenderer extends Renderer {
     }
     //Phaser
     update(){
-        super.update();
+        
     }
 
     draw(t, dt) {
@@ -183,7 +183,7 @@ export default class MyRenderer extends Renderer {
 
     addPlayerShip(sprite) {
         this.playerShip = sprite;
-        /*
+        
         document.body.classList.remove('lostGame');
         if (!document.body.classList.contains('tutorialDone')){
             document.body.classList.add('tutorial');
@@ -193,31 +193,88 @@ export default class MyRenderer extends Renderer {
         document.querySelector('#tryAgain').disabled = true;
         document.querySelector('#joinGame').disabled = true;
         document.querySelector('#joinGame').style.opacity = 0;
-        */
+        
 
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
     }
 
     addOffscreenIndicator(objData) {
-        //let container = document.querySelector('#offscreenIndicatorContainer');
-        //let indicatorEl = document.createElement('div');
-        //indicatorEl.setAttribute('id', 'offscreenIndicator' + objData.id);
-        //indicatorEl.classList.add('offscreenIndicator');
-        //container.appendChild(indicatorEl);
+        let container = document.querySelector('#offscreenIndicatorContainer');
+        let indicatorEl = document.createElement('div');
+        indicatorEl.setAttribute('id', 'offscreenIndicator' + objData.id);
+        indicatorEl.classList.add('offscreenIndicator');
+        container.appendChild(indicatorEl);
     }
 
     removeOffscreenIndicator(objData) {
-        //let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
-        //if (indicatorEl && indicatorEl.parentNode)
-            //indicatorEl.parentNode.removeChild(indicatorEl);
+        let indicatorEl = document.querySelector('#offscreenIndicator'+objData.id);
+        if (indicatorEl && indicatorEl.parentNode)
+            indicatorEl.parentNode.removeChild(indicatorEl);
     }
 
     updateHUD(data){
-
+        if (data.RTT){ qs('.latencyData').innerHTML = data.RTT;}
+        if (data.RTTAverage){ qs('.averageLatencyData').innerHTML = truncateDecimals(data.RTTAverage, 2);}
     }
 
     updateScore(data){
+        
+        let scoreContainer = qs('.score');
+        let scoreArray = [];
 
+        // remove score lines with objects that don't exist anymore
+        let scoreEls = scoreContainer.querySelectorAll('.line');
+        for (let x=0; x < scoreEls.length; x++){
+            if (data[scoreEls[x].dataset.objId] == null){
+                scoreEls[x].parentNode.removeChild(scoreEls[x]);
+            }
+        }
+
+        for (let id of Object.keys(data)){
+            let scoreEl = scoreContainer.querySelector(`[data-obj-id='${id}']`);
+            // create score line if it doesn't exist
+            if (scoreEl == null){
+                scoreEl = document.createElement('div');
+                scoreEl.classList.add('line');
+                if (this.playerShip && this.playerShip.id == parseInt(id)) scoreEl.classList.add('you');
+                scoreEl.dataset.objId = id;
+                scoreContainer.appendChild(scoreEl);
+            }
+
+            // stupid string/number conversion
+            if (this.sprites[parseInt(id)])
+                this.sprites[parseInt(id)].actor.changeName(data[id].name);
+
+            scoreEl.innerHTML = `${data[id].name}: ${data[id].kills}`;
+
+            scoreArray.push({
+                el: scoreEl,
+                data: data[id]
+            });
+        }
+
+        scoreArray.sort((a, b) => {return a.data.kills < b.data.kills;});
+
+        for (let x=0; x < scoreArray.length; x++){
+            scoreArray[x].el.style.transform = `translateY(${x}rem)`;
+        }
+    }
+
+    enableFullScreen(){
+        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) ||    // alternative standard method
+            (document.mozFullScreen || document.webkitIsFullScreen);
+
+        let docElm = document.documentElement;
+        if (!isInFullScreen) {
+
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            } else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            } else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 'use strict';
 
+const nameGenerator = require('./NameGenerator');
+
 import ServerEngine from 'lance/ServerEngine';
 import PlayerAvatar from '../common/PlayerAvatar';
 const NUM_BOTS = 3;
@@ -15,16 +17,9 @@ export default class MyServerEngine extends ServerEngine {
     start() {
         super.start();
         console.log("start game?");
-
         //for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
-
         this.gameEngine.initGame();
-
-        //this.players = {
-            //player1: null,
-            //player2: null
-        //};
-
+        
         //this.makeBot();
     }
 
@@ -36,12 +31,13 @@ export default class MyServerEngine extends ServerEngine {
             console.log("create ship");
             this.scoreData[ship.id] = {
                 kills: 0,
-                name: "guest"//nameGenerator('general')
+                //name: "guest"//nameGenerator('general')
+                name: nameGenerator('general')
             };
             this.updateScore();
         };
 
-        makePlayerShip();
+        //makePlayerShip();
 
         // handle client restart requests
         socket.on('requestRestart', makePlayerShip);

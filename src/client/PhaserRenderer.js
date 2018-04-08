@@ -28,11 +28,7 @@ export default class PhaserRenderer extends Renderer {
     }
 
     init() {
-        // prevent calling init twice
-        if (this.initPromise) return this.initPromise;
-
-        this.viewportWidth = window.innerWidth;
-        this.viewportHeight = window.innerHeight;
+        let p = super.init();
         /*
         //ignore since it could override config. This is test.
         this.config = {
@@ -46,76 +42,18 @@ export default class PhaserRenderer extends Renderer {
             }
         };
         */
-
-        if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
-            this.onDOMLoaded();
-        } else {
-            document.addEventListener('DOMContentLoaded', ()=>{
-                this.onDOMLoaded();
-            });
-        }
-
-        this.initPromise = new Promise((resolve, reject)=>{
-            let onLoadComplete = () => {
-                this.isReady = true;
-                resolve();
-            };
-
-            let resourceList = Object.keys(this.ASSETPATHS).map( x => {
-                return {
-                    name: x,
-                    url: this.ASSETPATHS[x]
-                };
-            });
-
-            // make sure there are actual resources in the queue
-            if (resourceList.length > 0){
-                //PIXI.loader.add(resourceList).load(onLoadComplete);
-            }else{
-                onLoadComplete();
-            }
-        });
-
-        return this.initPromise;
-    }
-
-    onDOMLoaded() {
-        //console.log(this.game);
-        //Phaser.Physics.ARCADE
-        //Phaser.Physics.Impact
-        //Phaser.Physics.Matter
-        //console.log(Phaser.Physics);
-
         this.game = new Phaser.Game(this.config);
-    }
-
-    preload(){
-
-    }
-
-    create(){
-
-    }
-
-    update(){
-
+        
+        return p; // eslint-disable-line new-cap
     }
 
     draw(t, dt) {
         super.draw(t, dt);
-        if (!this.isReady) return; // assets might not have been loaded yet
-        //for (let objId of Object.keys(this.sprites)) {
-            //let objData = this.gameEngine.world.objects[objId];
-            //let sprite = this.sprites[objId];
-
-            //if (objData) {
-                //sprite.x = objData.position.x;
-                //sprite.y = objData.position.y;
-                //sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
-            //}
-        //}
-        //this.renderer.render(this.stage);
     }
+
+    //tick(t, dt) {
+        //super.draw(t, dt);
+    //}
 
     addObject(obj) {
         super.addObject(obj);
@@ -137,22 +75,5 @@ export default class PhaserRenderer extends Renderer {
                 //delete this.sprites[obj.id];
             //}
         //}
-    }
-
-    enableFullScreen(){
-        let isInFullScreen = (document.fullScreenElement && document.fullScreenElement !== null) ||    // alternative standard method
-            (document.mozFullScreen || document.webkitIsFullScreen);
-
-        let docElm = document.documentElement;
-        if (!isInFullScreen) {
-
-            if (docElm.requestFullscreen) {
-                docElm.requestFullscreen();
-            } else if (docElm.mozRequestFullScreen) {
-                docElm.mozRequestFullScreen();
-            } else if (docElm.webkitRequestFullScreen) {
-                docElm.webkitRequestFullScreen();
-            }
-        }
     }
 }

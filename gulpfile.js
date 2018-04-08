@@ -176,7 +176,10 @@ gulp.task('watch', () =>{
 
     gulp.watch(['src/common/*.js','src/server/*.js','src/client/*.js'],['build']);
 
-    gulp.watch(['./public/index.html'],['html']);
+    gulp.watch(['./index.html'],['html']); // html file main entery
+    gulp.watch(['./assets/*.*'],['assets']);// image files or game files
+    gulp.watch(['assets/sass/*.scss'],['sass']);// css
+
 });
 
 //copy html
@@ -185,11 +188,11 @@ gulp.task('html',[],function(){
     .pipe(gulp.dest('./public'));
 });
 
+//assets
 gulp.task('assets',[],function(){
-    return gulp.src(['./assets/*.*'])    
+    return gulp.src(['assets/**/*.*','!assets/sass/**'])    
     .pipe(gulp.dest('./public/assets'));
 });
-
 
 //start server
 gulp.task('serve',[], function() {
@@ -209,7 +212,7 @@ gulp.task('serve',[], function() {
         browserSync.reload();
     });
     // Note: try wrapping in a function if getting an error like `TypeError: Bad argument at TypeError (native) at ChildProcess.spawn`
-    gulp.watch('main.js', function() {
+    gulp.watch('dist/main.js', function() {
         server.start.bind(server)();
     });
 });
@@ -231,6 +234,6 @@ gulp.task('sass', function () {
   });
 
 //default auto start
-gulp.task('default',['assets','html','build','watch'],()=>{
+gulp.task('default',['sass','assets','html','build','watch'],()=>{
     return gulp.start('browser-sync');
 });
