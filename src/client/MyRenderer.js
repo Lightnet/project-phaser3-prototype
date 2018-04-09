@@ -17,16 +17,13 @@ import Renderer from './PhaserRenderer';
 import Ship from '../common/Ship';
 
 
-
 export default class MyRenderer extends Renderer {
 
     constructor(gameEngine, clientEngine) {
         super(gameEngine, clientEngine);
-        this.sprites = {};
-
+        this.sprites = {}; // server and client id objects
         //Phaser config game 
         //this.config = {};
-
         this.config = {
             type: Phaser.AUTO,
             width: 800,
@@ -39,6 +36,7 @@ export default class MyRenderer extends Renderer {
                 //}
             //},
             scene: {
+                key:"default",//scene name
                 preload: this.preload,
                 create: this.create
             }
@@ -50,14 +48,24 @@ export default class MyRenderer extends Renderer {
     init() {
         let p = super.init();
 
+        this.lookingAt = { x: 0, y: 0 };
+        this.elapsedTime = Date.now();
+
+        this.viewportWidth = 800;
+        this.viewportHeight = 600;
+
         window.addEventListener('resize', ()=>{ this.setRendererSize(); });
         this.resizeApp();
         //console.log(this.game);
         //console.log(this.game.camera);
         //console.log(this.game.cameras);
         //console.log(Phaser);
-        console.log(Phaser.Cameras);
-        this.gameEngine.emit('renderer.ready');
+        //console.log(Phaser.Cameras);
+        console.log(this.game);
+        //console.log(this.game.scene.scenes);
+        //console.log(this.game.scene.scenes.Cameras);
+        //console.log(this.game.scene.keys['default']); //not loaded give null
+        //this.gameEngine.emit('renderer.ready');
         return p; // eslint-disable-line new-cap
     }
 
@@ -112,9 +120,12 @@ export default class MyRenderer extends Renderer {
     //Phaser
     create(){
         let render = MyRenderer.getInstance();
-        //render.setReady();
+        
+        render.getCurrentCamera();
+        render.isReady = true;
         render.gameEngine.emit('renderer.ready');
-        console.log(render.gameEngine);
+        
+        //console.log(render.gameEngine);
         //this.setReady();
         //console.log("create");
         //console.log(this);
@@ -132,6 +143,8 @@ export default class MyRenderer extends Renderer {
         logo.setCollideWorldBounds(true);
         emitter.startFollow(logo);
         */
+        console.log(this.scene.manager.keys.default);
+        //console.log(this.game.scene.keys['default']);
     }
     //Phaser
     update(){
@@ -144,22 +157,53 @@ export default class MyRenderer extends Renderer {
 
         let now = Date.now();
 
+        if (!this.isReady) return; // assets might not have been loaded yet
+
+        let worldWidth = this.gameEngine.worldSettings.width;
+        let worldHeight = this.gameEngine.worldSettings.height;
+
+        let viewportSeesRightBound = this.camera.x < this.viewportWidth - worldWidth;
+        let viewportSeesLeftBound = this.camera.x > 0;
+        let viewportSeesTopBound = this.camera.y > 0;
+        let viewportSeesBottomBound = this.camera.y < this.viewportHeight - worldHeight;
+
         for (let objId of Object.keys(this.sprites)) {
             let objData = this.gameEngine.world.objects[objId];
             let sprite = this.sprites[objId];
 
             if (objData) {
+
+                if (objData instanceof Ship && sprite != this.playerShip) {
+                    this.updateOffscreenIndicator(objData);
+                }
+
                 sprite.x = objData.position.x;
                 sprite.y = objData.position.y;
-            }
 
-            if (objData instanceof Ship){
-                //sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
-                sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
-            } else{
-                if(this.gameEngine.world.objects[objId] !=null){
+                if (objData instanceof Ship){
+                    //sprite.actor.shipContainerSprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
                     sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                } else{
+                    if(this.gameEngine.world.objects[objId] !=null){
+                        sprite.rotation = this.gameEngine.world.objects[objId].angle * Math.PI/180;
+                    }
                 }
+
+                
+                // make the wraparound seamless for objects other than the player ship
+                if (sprite != this.playerShip && viewportSeesLeftBound && objData.position.x > this.viewportWidth - this.camera.x) {
+                    sprite.x = objData.position.x - worldWidth;
+                }
+                if (sprite != this.playerShip && viewportSeesRightBound && objData.position.x < -this.camera.x) {
+                    sprite.x = objData.position.x + worldWidth;
+                }
+                if (sprite != this.playerShip && viewportSeesTopBound && objData.position.y > this.viewportHeight - this.camera.y) {
+                    sprite.y = objData.position.y - worldHeight;
+                }
+                if (sprite != this.playerShip && viewportSeesBottomBound && objData.position.y < -this.camera.y) {
+                    sprite.y = objData.position.y + worldHeight;
+                }
+                
             }
 
             if (sprite) {
@@ -170,6 +214,7 @@ export default class MyRenderer extends Renderer {
             }
         }
 
+        
         let cameraTarget;
         if (this.playerShip) {
             cameraTarget = this.playerShip;
@@ -177,11 +222,48 @@ export default class MyRenderer extends Renderer {
         } else if (!this.gameStarted && !cameraTarget) {
 
             // calculate centroid
-            //cameraTarget = getCentroid(this.gameEngine.world.objects);
+            cameraTarget = getCentroid(this.gameEngine.world.objects);
             this.cameraRoam = true;
         }
+        
 
+        
+        if (cameraTarget) {
+            // 'cameraroam' in Utils.getUrlVars()
+            if (this.cameraRoam) {
+                let lookingAtDeltaX = cameraTarget.x - this.lookingAt.x;
+                let lookingAtDeltaY = cameraTarget.y - this.lookingAt.y;
+                let cameraTempTargetX;
+                let cameraTempTargetY;
 
+                if (lookingAtDeltaX > worldWidth / 2) {
+                    this.bgPhaseX++;
+                    cameraTempTargetX = this.lookingAt.x + worldWidth;
+                } else if (lookingAtDeltaX < -worldWidth / 2) {
+                    this.bgPhaseX--;
+                    cameraTempTargetX = this.lookingAt.x - worldWidth;
+                } else {
+                    cameraTempTargetX = this.lookingAt.x + lookingAtDeltaX * 0.02;
+                }
+
+                if (lookingAtDeltaY > worldHeight / 2) {
+                    cameraTempTargetY = this.lookingAt.y + worldHeight;
+                    this.bgPhaseY++;
+                } else if (lookingAtDeltaY < -worldHeight / 2) {
+                    this.bgPhaseY--;
+                    cameraTempTargetY = this.lookingAt.y - worldHeight;
+                } else {
+                    cameraTempTargetY = this.lookingAt.y + lookingAtDeltaY * 0.02;
+                }
+
+                this.centerCamera(cameraTempTargetX, cameraTempTargetY);
+
+            } else {
+                this.centerCamera(cameraTarget.x, cameraTarget.y);
+            }
+        }
+
+        
 
 
         this.elapsedTime = now;
@@ -215,8 +297,27 @@ export default class MyRenderer extends Renderer {
         document.querySelector('#joinGame').disabled = true;
         document.querySelector('#joinGame').style.opacity = 0;
         
-
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
+    }
+
+    /**
+     * Centers the viewport on a coordinate in the gameworld
+     * @param {Number} targetX
+     * @param {Number} targetY
+     */
+    centerCamera(targetX, targetY) {
+        if (isNaN(targetX) || isNaN(targetY)) return;
+        if (!this.lastCameraPosition){
+            this.lastCameraPosition = {};
+        }
+
+        this.lastCameraPosition.x = this.camera.x;
+        this.lastCameraPosition.y = this.camera.y;
+
+        this.camera.x = this.viewportWidth / 2 - targetX;
+        this.camera.y = this.viewportHeight / 2 - targetY;
+        this.lookingAt.x = targetX;
+        this.lookingAt.y = targetY;
     }
 
     addOffscreenIndicator(objData) {
@@ -298,12 +399,53 @@ export default class MyRenderer extends Renderer {
         }
     }
 
+    //get current scene
     getScene(){
-        return this.game.scene.scenes[0];
+        //return this.game.scene.scenes[0];
+        //console.log(this.game.scene.keys['default']); //loaded
+        //console.log(this.game.scene.keys['default'].cameras.main);
+        return this.game.scene.keys['default'];
+    }
+
+    //get current camera
+    getCamera(){
+        return this.game.scene.keys['default'].cameras.main;
+    }
+
+    //get current camera
+    getCurrentCamera(){
+        this.camera = this.game.scene.keys['default'].cameras.main;
     }
 
 }
 
+function getCentroid(objects) {
+    let maxDistance = 500; // max distance to add to the centroid
+    let shipCount = 0;
+    let centroid = { x: 0, y: 0 };
+    let selectedShip = null;
+
+    for (let id of Object.keys(objects)){
+        let obj = objects[id];
+        if (obj instanceof Ship) {
+            if (selectedShip == null)
+                selectedShip = obj;
+
+            let objDistance = Math.sqrt( Math.pow((selectedShip.position.x-obj.position.y), 2) + Math.pow((selectedShip.position.y-obj.position.y), 2));
+            if (selectedShip == obj || objDistance < maxDistance) {
+                centroid.x += obj.position.x;
+                centroid.y += obj.position.y;
+                shipCount++;
+            }
+        }
+    }
+
+    centroid.x /= shipCount;
+    centroid.y /= shipCount;
+
+
+    return centroid;
+}
 
 // convenience function
 function qs(selector) { return document.querySelector(selector);}
