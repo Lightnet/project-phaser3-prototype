@@ -77,6 +77,9 @@ export default class Ship extends DynamicObject {
         }
     }
 
+    // ship rotation is input-deterministic, no bending needed
+    get bendingAngleLocalMultiple() { return 0.0; }
+
     static get netScheme() {
         return Object.assign({
             showThrust: { type: Serializer.TYPES.INT32 }

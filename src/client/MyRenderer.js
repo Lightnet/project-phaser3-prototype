@@ -73,7 +73,7 @@ export default class MyRenderer extends Renderer {
         //this.viewportWidth = window.innerWidth;
         //this.viewportHeight = window.innerHeight;
         console.log("resize");
-        this.resizeApp();
+        //this.resizeApp();
     }
 
     // Resize
@@ -129,7 +129,7 @@ export default class MyRenderer extends Renderer {
         //this.setReady();
         //console.log("create");
         //console.log(this);
-        //this.add.image(400, 300, 'sky');
+        this.add.image(400, 300, 'sky');
         /*
         var particles = this.add.particles('red');
         var emitter = particles.createEmitter({
@@ -203,6 +203,7 @@ export default class MyRenderer extends Renderer {
                 if (sprite != this.playerShip && viewportSeesBottomBound && objData.position.y < -this.camera.y) {
                     sprite.y = objData.position.y + worldHeight;
                 }
+                
                 
             }
 
@@ -296,6 +297,9 @@ export default class MyRenderer extends Renderer {
         document.querySelector('#tryAgain').disabled = true;
         document.querySelector('#joinGame').disabled = true;
         document.querySelector('#joinGame').style.opacity = 0;
+
+        //phaser 3 camera get renderer.getCamera();
+        this.camera.startFollow(sprite);
         
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
     }
@@ -314,8 +318,12 @@ export default class MyRenderer extends Renderer {
         this.lastCameraPosition.x = this.camera.x;
         this.lastCameraPosition.y = this.camera.y;
 
-        this.camera.x = this.viewportWidth / 2 - targetX;
-        this.camera.y = this.viewportHeight / 2 - targetY;
+        //this.camera.x = this.viewportWidth / 2 - targetX;
+        //this.camera.y = this.viewportHeight / 2 - targetY;
+        //this.cameras.main.setSize(400, 300);// from game with scene class
+        //this.cameras.startFollow(clown);
+
+
         this.lookingAt.x = targetX;
         this.lookingAt.y = targetY;
     }
@@ -326,6 +334,48 @@ export default class MyRenderer extends Renderer {
         indicatorEl.setAttribute('id', 'offscreenIndicator' + objData.id);
         indicatorEl.classList.add('offscreenIndicator');
         container.appendChild(indicatorEl);
+    }
+
+    updateOffscreenIndicator(objData){
+        // player ship might have been destroyed
+        if (!this.playerShip) return;
+
+        let indicatorEl = document.querySelector('#offscreenIndicator' + objData.id);
+        if (!indicatorEl) {
+            console.error(`No indicatorEl found with id ${objData.id}`);
+            return;
+        }
+        let playerShipObj = this.gameEngine.world.objects[this.playerShip.id];
+        let slope = (objData.position.y - playerShipObj.position.y) / (objData.position.x - playerShipObj.position.x);
+        let b = this.viewportHeight/ 2;
+
+        let padding = 30;
+        let indicatorPos = { x: 0, y: 0 };
+
+        if (objData.position.y < playerShipObj.position.y - this.viewportHeight/2) {
+            indicatorPos.x = this.viewportWidth/2 + (padding - b)/slope;
+            indicatorPos.y = padding;
+        } else if (objData.position.y > playerShipObj.position.y + this.viewportHeight/2) {
+            indicatorPos.x = this.viewportWidth/2 + (this.viewportHeight - padding - b)/slope;
+            indicatorPos.y = this.viewportHeight - padding;
+        }
+
+        if (objData.position.x < playerShipObj.position.x - this.viewportWidth/2) {
+            indicatorPos.x = padding;
+            indicatorPos.y = slope * (-this.viewportWidth/2 + padding) + b;
+        } else if (objData.position.x > playerShipObj.position.x + this.viewportWidth/2) {
+            indicatorPos.x = this.viewportWidth - padding;
+            indicatorPos.y = slope * (this.viewportWidth/2 - padding) + b;
+        }
+
+        if (indicatorPos.x == 0 && indicatorPos.y == 0){
+            indicatorEl.style.opacity = 0;
+        } else {
+            indicatorEl.style.opacity = 1;
+            let rotation = Math.atan2(objData.position.y - playerShipObj.position.y, objData.position.x - playerShipObj.position.x);
+            rotation = rotation * 180/Math.PI; // rad2deg
+            indicatorEl.style.transform = `translateX(${indicatorPos.x}px) translateY(${indicatorPos.y}px) rotate(${rotation}deg) `;
+        }
     }
 
     removeOffscreenIndicator(objData) {

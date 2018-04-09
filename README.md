@@ -55,8 +55,11 @@
  * https://phaser.io/tutorials/getting-started-phaser3/part5
  * http://browsergameshub.com/phaser3-lessons-and-code-pt1/#direct-1
 
-# Phaser Assets: 
+# Phaser Assets & Examples: 
  * https://github.com/photonstorm/phaser3-examples/tree/master/public
+ * https://labs.phaser.io/edit.html?src=src\camera\background%20color%20interpolate.js
+ * https://labs.phaser.io/view.html?src=src\camera\follow%20sprite.js
+ * https://labs.phaser.io/view.html?src=src\camera\overlap.js
 
 
 # npm:

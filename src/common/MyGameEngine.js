@@ -125,7 +125,11 @@ export default class MyGameEngine extends GameEngine {
         let newShipX = Math.floor(Math.random()*(this.worldSettings.width-200)) + 200;
         let newShipY = Math.floor(Math.random()*(this.worldSettings.height-200)) + 200;
 
-        let ship = new Ship(this, null, {position: new TwoVector(200, 200)});
+        //let ship = new Ship(this, null, {position: new TwoVector(200, 200)});
+        let ship = new Ship(this, null, {
+            position: new TwoVector(newShipX, newShipY)
+        });
+        
         ship.playerId = playerId;
         this.addObjectToWorld(ship);
         //console.log(`ship added: ${ship.toString()}`);

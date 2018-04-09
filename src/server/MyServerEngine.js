@@ -17,7 +17,7 @@ export default class MyServerEngine extends ServerEngine {
     start() {
         super.start();
         //console.log("start game?");
-        //for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
+        for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
         this.gameEngine.initGame();
         
         this.gameEngine.on('missileHit', e => {
