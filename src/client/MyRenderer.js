@@ -46,7 +46,9 @@ export default class MyRenderer extends Renderer {
     }
 
     init() {
-        let p = super.init();
+        if (this.initPromise) return this.initPromise;
+
+        this.isReady = false;
 
         this.lookingAt = { x: 0, y: 0 };
         this.elapsedTime = Date.now();
@@ -54,26 +56,51 @@ export default class MyRenderer extends Renderer {
         this.viewportWidth = 800;
         this.viewportHeight = 600;
 
-        window.addEventListener('resize', ()=>{ this.setRendererSize(); });
-        this.resizeApp();
-        //console.log(this.game);
-        //console.log(this.game.camera);
-        //console.log(this.game.cameras);
-        //console.log(Phaser);
-        //console.log(Phaser.Cameras);
-        console.log(this.game);
-        //console.log(this.game.scene.scenes);
-        //console.log(this.game.scene.scenes.Cameras);
-        //console.log(this.game.scene.keys['default']); //not loaded give null
-        //this.gameEngine.emit('renderer.ready');
-        return p; // eslint-disable-line new-cap
+        
+
+        
+
+        this.gameEngine.once('scenebootready', () => {
+            console.log("scenebootready!");
+            this.setReady();
+
+            window.addEventListener('resize', ()=>{ 
+                this.setRendererSize(); 
+            });
+    
+            this.resizeApp();
+        });
+
+        this.initPromise = new Promise((resolve, reject)=>{
+            let onLoadComplete = () => {
+                //this.isReady = true;
+                resolve();
+
+                console.log("finished loading...");
+            };
+
+            //This will help load texture correctly
+            this.config.scene.create = function() {
+                let render = MyRenderer.getInstance();
+                render.gameEngine.emit('scenebootready');
+
+                this.add.image(400, 300, 'sky');
+                onLoadComplete();
+            }
+            this.game = new Phaser.Game(this.config);
+            console.log("initPromise");
+            //console.log(this.game);
+            //onLoadComplete();
+        });
+        
+        return this.initPromise;
     }
 
     setRendererSize() {
         //this.viewportWidth = window.innerWidth;
         //this.viewportHeight = window.innerHeight;
         console.log("resize");
-        //this.resizeApp();
+        this.resizeApp();
     }
 
     // Resize
@@ -117,13 +144,20 @@ export default class MyRenderer extends Renderer {
         this.load.image('red', 'assets/particles/red.png');
     }
 
+
+    setReady(){
+        this.getCurrentCamera();
+        this.isReady = true;
+        this.gameEngine.emit('renderer.ready');
+    }
+
     //Phaser
     create(){
         let render = MyRenderer.getInstance();
-        
-        render.getCurrentCamera();
-        render.isReady = true;
-        render.gameEngine.emit('renderer.ready');
+        //render.getCurrentCamera();
+        //render.isReady = true;
+        //render.gameEngine.emit('renderer.ready');
+        render.gameEngine.emit('scenebootready');
         
         //console.log(render.gameEngine);
         //this.setReady();
@@ -143,7 +177,7 @@ export default class MyRenderer extends Renderer {
         logo.setCollideWorldBounds(true);
         emitter.startFollow(logo);
         */
-        console.log(this.scene.manager.keys.default);
+        //console.log(this.scene.manager.keys.default);
         //console.log(this.game.scene.keys['default']);
     }
     //Phaser
@@ -162,6 +196,7 @@ export default class MyRenderer extends Renderer {
         let worldWidth = this.gameEngine.worldSettings.width;
         let worldHeight = this.gameEngine.worldSettings.height;
 
+        if(!this.camera) return;
         let viewportSeesRightBound = this.camera.x < this.viewportWidth - worldWidth;
         let viewportSeesLeftBound = this.camera.x > 0;
         let viewportSeesTopBound = this.camera.y > 0;
@@ -228,7 +263,6 @@ export default class MyRenderer extends Renderer {
         }
         
 
-        
         if (cameraTarget) {
             // 'cameraroam' in Utils.getUrlVars()
             if (this.cameraRoam) {
@@ -465,6 +499,7 @@ export default class MyRenderer extends Renderer {
     //get current camera
     getCurrentCamera(){
         this.camera = this.game.scene.keys['default'].cameras.main;
+        console.log(this.camera);
     }
 
 }

@@ -27,6 +27,10 @@ export default class PhaserRenderer extends Renderer {
         this.isReady = false;
     }
 
+    //start(){
+        //this.game = new Phaser.Game(this.config);
+    //}
+
     init() {
         let p = super.init();
         /*
@@ -42,7 +46,6 @@ export default class PhaserRenderer extends Renderer {
             }
         };
         */
-        this.game = new Phaser.Game(this.config);
         
         return p; // eslint-disable-line new-cap
     }
