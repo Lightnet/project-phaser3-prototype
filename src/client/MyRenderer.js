@@ -52,7 +52,11 @@ export default class MyRenderer extends Renderer {
 
         window.addEventListener('resize', ()=>{ this.setRendererSize(); });
         this.resizeApp();
-        console.log(this.game);
+        //console.log(this.game);
+        //console.log(this.game.camera);
+        //console.log(this.game.cameras);
+        //console.log(Phaser);
+        console.log(Phaser.Cameras);
         this.gameEngine.emit('renderer.ready');
         return p; // eslint-disable-line new-cap
     }
@@ -97,6 +101,9 @@ export default class MyRenderer extends Renderer {
     preload(){
         this.load.setBaseURL('http://localhost:3000/');
         this.load.image('ship', 'assets/sprites/asteroids_ship.png');
+
+        this.load.image('shot', 'assets/shot.png');
+
         this.load.image('sky', 'assets/skies/space3.png');
         this.load.image('logo', 'assets/sprites/phaser3-logo.png');
         this.load.image('red', 'assets/particles/red.png');
@@ -162,6 +169,20 @@ export default class MyRenderer extends Renderer {
                 }
             }
         }
+
+        let cameraTarget;
+        if (this.playerShip) {
+            cameraTarget = this.playerShip;
+            // this.cameraRoam = false;
+        } else if (!this.gameStarted && !cameraTarget) {
+
+            // calculate centroid
+            //cameraTarget = getCentroid(this.gameEngine.world.objects);
+            this.cameraRoam = true;
+        }
+
+
+
 
         this.elapsedTime = now;
     }
@@ -275,6 +296,10 @@ export default class MyRenderer extends Renderer {
                 docElm.webkitRequestFullScreen();
             }
         }
+    }
+
+    getScene(){
+        return this.game.scene.scenes[0];
     }
 
 }

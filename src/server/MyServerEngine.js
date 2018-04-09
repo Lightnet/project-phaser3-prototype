@@ -16,10 +16,23 @@ export default class MyServerEngine extends ServerEngine {
 
     start() {
         super.start();
-        console.log("start game?");
+        //console.log("start game?");
         //for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
         this.gameEngine.initGame();
         
+        this.gameEngine.on('missileHit', e => {
+            // add kills
+            if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;
+            // remove score data for killed ship
+            delete this.scoreData[e.ship.id];
+            this.updateScore();
+
+            console.log(`ship killed: ${e.ship.toString()}`);
+            this.gameEngine.removeObjectFromWorld(e.ship.id);
+            if (e.ship.isBot) {
+                setTimeout(() => this.makeBot(), 5000);
+            }
+        });
         //this.makeBot();
     }
 
@@ -60,6 +73,14 @@ export default class MyServerEngine extends ServerEngine {
 
     makeBot() {
         let bot = this.gameEngine.makeShip(0);
+        bot.attachAI();
+
+        this.scoreData[bot.id] = {
+            kills: 0,
+            name: nameGenerator('general') + 'Bot'
+        };
+
+        this.updateScore();
     }
 
     updateScore() {

@@ -5,7 +5,10 @@
 )
 
 # Information:
-    Note it javascript base script.
+    Note it javascript and typescript base script.
+
+
+    game.scene.keys.[your scene key]
 
 ```
 <head>

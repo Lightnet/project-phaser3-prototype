@@ -8,6 +8,8 @@ import KeyboardControls from 'lance-gg/controls/KeyboardControls';
 import MyRenderer from '../client/MyRenderer';
 import Utils from '../common/Utils';
 
+import Ship from '../common/Ship';
+
 export default class MyClientEngine extends ClientEngine {
 
     constructor(gameEngine, options) {

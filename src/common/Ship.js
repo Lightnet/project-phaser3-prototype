@@ -44,6 +44,15 @@ export default class Ship extends DynamicObject {
     }
 
     onRemoveFromWorld(gameEngine) {
+        if (this.fireLoop) {
+            this.fireLoop.destroy();
+        }
+
+        if (this.onPreStep){
+            this.gameEngine.removeListener('preStep', this.onPreStep);
+            this.onPreStep = null;
+        }
+        
         let renderer = Renderer.getInstance();
         if (renderer) {
             if (gameEngine.isOwnedByPlayer(this)) {
