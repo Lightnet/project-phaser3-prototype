@@ -24,6 +24,10 @@ export default class MyRenderer extends Renderer {
         this.sprites = {}; // server and client id objects
         //Phaser config game 
         //this.config = {};
+        this.scene = null;
+        this.bgPhaseX = 0;
+        this.bgPhaseY = 0;
+
         this.config = {
             type: Phaser.AUTO,
             width: 800,
@@ -56,26 +60,21 @@ export default class MyRenderer extends Renderer {
         this.viewportWidth = 800;
         this.viewportHeight = 600;
 
-        
-
-        
-
         this.gameEngine.once('scenebootready', () => {
             console.log("scenebootready!");
             this.setReady();
 
             window.addEventListener('resize', ()=>{ 
-                this.setRendererSize(); 
+                //this.setRendererSize(); 
             });
     
-            this.resizeApp();
+            //this.resizeApp();
         });
 
         this.initPromise = new Promise((resolve, reject)=>{
             let onLoadComplete = () => {
                 //this.isReady = true;
                 resolve();
-
                 console.log("finished loading...");
             };
 
@@ -84,9 +83,19 @@ export default class MyRenderer extends Renderer {
                 let render = MyRenderer.getInstance();
                 render.gameEngine.emit('scenebootready');
 
-                this.add.image(400, 300, 'sky');
+                //this.add.image(400, 300, 'sky');
+
+                //this.add.group({ key: 'sky', frameQuantity: 300 });
+                //this.background = this.add.tileSprite(0, 0, 800, 600, 'sky');
+                this.background = this.add.tileSprite(0, 0, 800, 600, 'space');
+
+                //this.background = this.add.tileSprite(0, 0, 3000, 3000, 'space');
+                console.log(this.background);
+                console.log(this.add);
+                console.log(this.cameras.main);
                 onLoadComplete();
             }
+
             this.game = new Phaser.Game(this.config);
             console.log("initPromise");
             //console.log(this.game);
@@ -140,6 +149,7 @@ export default class MyRenderer extends Renderer {
         this.load.image('shot', 'assets/shot.png');
 
         this.load.image('sky', 'assets/skies/space3.png');
+        this.load.image('space', 'assets/skies/space4.png');
         this.load.image('logo', 'assets/sprites/phaser3-logo.png');
         this.load.image('red', 'assets/particles/red.png');
     }
@@ -298,9 +308,33 @@ export default class MyRenderer extends Renderer {
             }
         }
 
-        
+        let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
+        let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
 
+        //this.bg1.tilePosition.x = bgOffsetX * 0.01;
+        //this.bg1.tilePosition.y = bgOffsetY * 0.01;
 
+        if (this.scene == null){
+            this.scene = this.getScene();
+        }
+        if (this.scene){
+            //https://labs.phaser.io/edit.html?src=src\camera\scroll%20view.js
+            //https://labs.phaser.io/edit.html?src=src\camera\follow%20sprite.js
+
+            //camera scroll viewport but not camera position
+            this.scene.cameras.main.scrollX = this.camera.x * -1;
+            this.scene.cameras.main.scrollY = this.camera.y * -1;
+
+            //tilemap move scroll but not position
+            this.scene.background.tilePositionX = bgOffsetX * -1; //var from create function scene
+            this.scene.background.tilePositionY = bgOffsetY * -1; //var from create function scene
+
+            if (cameraTarget){
+                //set tilesprite position while following player
+                this.scene.background.setX(this.scene.cameras.main.scrollX  + this.viewportWidth/2 );
+                this.scene.background.setY(this.scene.cameras.main.scrollY  + this.viewportHeight/2);
+            }
+        }
         this.elapsedTime = now;
     }
 
@@ -333,7 +367,7 @@ export default class MyRenderer extends Renderer {
         document.querySelector('#joinGame').style.opacity = 0;
 
         //phaser 3 camera get renderer.getCamera();
-        this.camera.startFollow(sprite);
+        //this.camera.startFollow(sprite);
         
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
     }
@@ -352,8 +386,8 @@ export default class MyRenderer extends Renderer {
         this.lastCameraPosition.x = this.camera.x;
         this.lastCameraPosition.y = this.camera.y;
 
-        //this.camera.x = this.viewportWidth / 2 - targetX;
-        //this.camera.y = this.viewportHeight / 2 - targetY;
+        this.camera.x = this.viewportWidth / 2 - targetX;
+        this.camera.y = this.viewportHeight / 2 - targetY;
         //this.cameras.main.setSize(400, 300);// from game with scene class
         //this.cameras.startFollow(clown);
 
@@ -498,7 +532,9 @@ export default class MyRenderer extends Renderer {
 
     //get current camera
     getCurrentCamera(){
-        this.camera = this.game.scene.keys['default'].cameras.main;
+        //this.camera = this.game.scene.keys['default'].cameras.main;
+
+        this.camera = {x:0,y:0};
         console.log(this.camera);
     }
 
