@@ -32,8 +32,8 @@ export default class Ship extends DynamicObject {
             sprite.id = this.id;
             //console.log(sprite);
             //sprite.position.set(this.position.x, this.position.y);
-            sprite.setX(this.position.x);
-            sprite.setY(this.position.y);
+            //sprite.setX(this.position.x);
+            //sprite.setY(this.position.y);
 
             if (gameEngine.isOwnedByPlayer(this)) {
                 renderer.addPlayerShip(sprite);

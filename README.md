@@ -64,6 +64,7 @@ npm start
  * https://labs.phaser.io/edit.html?src=src\camera\background%20color%20interpolate.js
  * https://labs.phaser.io/view.html?src=src\camera\follow%20sprite.js
  * https://labs.phaser.io/view.html?src=src\camera\overlap.js
+ * https://github.com/photonstorm/phaser-examples/blob/master/examples/text/center%20text.js
 
 # npm:
  * gulp-sass required node-sass to work.

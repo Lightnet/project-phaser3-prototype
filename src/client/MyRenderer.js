@@ -83,6 +83,9 @@ export default class MyRenderer extends Renderer {
                 let render = MyRenderer.getInstance();
                 render.gameEngine.emit('scenebootready');
 
+                this.soundFX_projectilehit = this.sound.add("projectilehit");
+                this.soundFX_lasergun = this.sound.add("lasergun");
+
                 //this.add.image(400, 300, 'sky');
 
                 //this.add.group({ key: 'sky', frameQuantity: 300 });
@@ -144,6 +147,11 @@ export default class MyRenderer extends Renderer {
     //Phaser
     preload(){
         this.load.setBaseURL('http://localhost:3000/');
+
+        this.load.audio("projectilehit","assets/audio/193429__unfa__projectile-hit.mp3");
+        this.load.audio("lasergun","assets/audio/248293__chocobaggy__weird-laser-gun.mp3");
+
+
         this.load.image('ship', 'assets/sprites/asteroids_ship.png');
 
         this.load.image('shot', 'assets/shot.png');
@@ -162,18 +170,17 @@ export default class MyRenderer extends Renderer {
     }
 
     //Phaser
-    create(){
-        let render = MyRenderer.getInstance();
+    create(){ //not sure here
+        //let render = MyRenderer.getInstance();
         //render.getCurrentCamera();
         //render.isReady = true;
         //render.gameEngine.emit('renderer.ready');
-        render.gameEngine.emit('scenebootready');
-        
+        //render.gameEngine.emit('scenebootready');
         //console.log(render.gameEngine);
         //this.setReady();
         //console.log("create");
         //console.log(this);
-        this.add.image(400, 300, 'sky');
+        //this.add.image(400, 300, 'sky');
         /*
         var particles = this.add.particles('red');
         var emitter = particles.createEmitter({

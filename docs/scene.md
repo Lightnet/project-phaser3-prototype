@@ -99,7 +99,7 @@ class Example2 extends Phaser.Scene{
     create(){
         //this.image = this.add.image(400,300,"key name");
 
-        this.text = this.add.text(0,0,"Welcome to example2!",{font:40pc Impact});
+        this.text = this.add.text(0,0,"Welcome to example2!",{font:"40px Impact"});
 
         var tween = this.tweens.add({
             target:this.text,

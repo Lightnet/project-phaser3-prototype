@@ -88,11 +88,18 @@ export default class MyClientEngine extends ClientEngine {
 
         });
         
-        //this.gameEngine.on('fireMissile', () => { this.sounds.fireMissile.play(); });
+        this.gameEngine.on('fireMissile', () => { 
+            if(this.renderer.scene){
+                //console.log(this.renderer.scene);
+                this.renderer.scene.soundFX_lasergun.play();
+            }
+        });
         this.gameEngine.on('missileHit', () => {
             // don't play explosion sound if the player is not in game
             if (this.renderer.playerShip) {
-                //this.sounds.missileHit.play();
+                if(this.renderer.scene){
+                    this.renderer.scene.soundFX_projectilehit.play();
+                }
             }
         });
 
