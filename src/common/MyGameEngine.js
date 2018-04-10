@@ -182,7 +182,6 @@ export default class MyGameEngine extends GameEngine {
                 ship.showThrust--;
         });
     }
-
     
 }
 

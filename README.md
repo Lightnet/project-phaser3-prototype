@@ -3,29 +3,25 @@
 
 # project-phaser3-prototype
 
-# Created by: Lightnet
-
 # License: MIT
 
+Created by: Lightnet
+
 # Information:
- Phaser 3.3.0, Lance-gg 2.0.5, and Nodejs 8.11.1 is for multiplayer game client and server build.
- 
- Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 multiplayer. Working on simple template builds.
+ Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 nodejs multiplayer. Working on project template build.
 
- Not sure if Phaser physics server side for nodejs hasn't been tested yet. Lance-gg network has another way to for 2D collision. Note it may required different way to code it since render the game for Phaser doesn't work on server nodejs since it required window and other objects to run headless is not possible. (It is possible but it required more R&D using more packages.)
-  
- This is just a test build.
+ Not sure if Phaser physics server side for nodejs hasn't been tested yet. Lance-gg network has 2D collision server side. Note it may required different way to code it since render the game for Phaser doesn't work on server nodejs since it required window and other objects to run headless is not possible. (It is possible but it required more R&D using more packages.)
 
- Porting [spaace](https://github.com/lance-gg/spaaace) pixi.js > phaser 3.3.0 Frameworks.
+ Porting [spaace](https://github.com/lance-gg/spaaace) Pixi.js > Phaser 3.3.0 Frameworks.
 
 # Notes:
- * Some files are from Phaser 3.3.0 Github Examples for testing.
+ * Some files are from Phaser 3.3.0 and Lance-gg Github Examples for testing.
  * Phaser 3.3.0 physics server code have not yet work or tested to sync with client and server node of other framework engines.
  * Testing seem slow if bundle.js file is taking long time for chrome.
  * Work in progress.
 
 # Browser notes:
- * Chrome Content Security Policy and image tends to break and it the express server is setup for dev.
+ * Chrome Content Security Policy and image tends to break. Express server has to be setup and config right for dev.
  * Firefox work fine.
 
 # Packages / Programs:
@@ -38,7 +34,15 @@
 
 # install:
  * npm install
- * gulp default
+ * gulp default 
+
+# Builds:
+
+```
+npm start
+```
+ This will start project build from command line or power shell.
+
  
 # Reference Links:
  * https://github.com/Flaxis/slick-ui
@@ -60,7 +64,6 @@
  * https://labs.phaser.io/edit.html?src=src\camera\background%20color%20interpolate.js
  * https://labs.phaser.io/view.html?src=src\camera\follow%20sprite.js
  * https://labs.phaser.io/view.html?src=src\camera\overlap.js
-
 
 # npm:
  * gulp-sass required node-sass to work.
