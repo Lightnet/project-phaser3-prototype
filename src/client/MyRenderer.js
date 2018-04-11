@@ -65,10 +65,9 @@ export default class MyRenderer extends Renderer {
             this.setReady();
 
             window.addEventListener('resize', ()=>{ 
-                //this.setRendererSize(); 
+                this.setRendererSize(); 
             });
-    
-            //this.resizeApp();
+            this.resizeApp();
         });
 
         this.initPromise = new Promise((resolve, reject)=>{
@@ -160,6 +159,8 @@ export default class MyRenderer extends Renderer {
         this.load.image('space', 'assets/skies/space4.png');
         this.load.image('logo', 'assets/sprites/phaser3-logo.png');
         this.load.image('red', 'assets/particles/red.png');
+
+        this.load.image('smokeparticle', 'assets/smokeparticle.png');
     }
 
 
@@ -224,6 +225,12 @@ export default class MyRenderer extends Renderer {
             let sprite = this.sprites[objId];
 
             if (objData) {
+
+                // if the object requests a "showThrust" then invoke it in the actor
+                if (sprite.actor && sprite.actor.thrustEmitter) {
+                    sprite.actor.thrustEmitter.emit = !!objData.showThrust;
+                    //console.log(objData.showThrust);
+                }
 
                 if (objData instanceof Ship && sprite != this.playerShip) {
                     this.updateOffscreenIndicator(objData);
@@ -504,6 +511,14 @@ export default class MyRenderer extends Renderer {
 
         for (let x=0; x < scoreArray.length; x++){
             scoreArray[x].el.style.transform = `translateY(${x}rem)`;
+        }
+    }
+
+    onKeyChange(e){
+        if (this.playerShip) {
+            if (e.keyName === 'up') {
+                this.playerShip.actor.thrustEmitter.emit = e.isDown;
+            }
         }
     }
 

@@ -64,10 +64,8 @@ export default class MyGameEngine extends GameEngine {
             }
         });
 
-        this.on('postStep', () => { 
-            //this.postStepHandleBall();
-            this.reduceVisibleThrust.bind(this);
-        });
+        this.on('postStep', this.reduceVisibleThrust.bind(this));
+
         this.on('objectAdded', (object) => {
 
         });
