@@ -17,9 +17,12 @@ export default class MyServerEngine extends ServerEngine {
     start() {
         super.start();
         //console.log("start game?");
+        //this will make bots
         for (let x = 0; x < NUM_BOTS; x++) this.makeBot();
+        //start game init
         this.gameEngine.initGame();
-        
+
+        //event trigger when missile is hit from collision
         this.gameEngine.on('missileHit', e => {
             // add kills
             if (this.scoreData[e.missile.ownerId]) this.scoreData[e.missile.ownerId].kills++;

@@ -22,13 +22,11 @@ export default class Missile extends DynamicObject {
     onAddToWorld(gameEngine) {
         let renderer = Renderer.getInstance();
         if (renderer) {
-
             let scene = renderer.getScene();//get current index scenes
             let sprite = scene.add.image(10, 10, 'shot');
             renderer.sprites[this.id] = sprite; //assign id for render sprites array
             sprite.x = this.position.x;
             sprite.y = this.position.y;
-
         }
     }
 

@@ -32,9 +32,21 @@ Created by: Lightnet
  * Gulp 3.9.1 (auto task build scripts)
  * Lance-gg 2.0.5 (Multiplayer Network for client and server engine or framework design)
 
-# install:
- * npm install
- * gulp default 
+# Install:
+
+You need to download and install nodejs to get packages files running. As well IDE editor like Visual Studio Code.
+
+Command Line:
+```
+ npm install
+```
+This will install packages from package.json file.
+
+
+```
+ gulp default 
+```
+This will run auto build development server and refesh files for update changes.
 
 # Builds:
 

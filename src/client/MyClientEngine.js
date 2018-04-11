@@ -14,19 +14,11 @@ export default class MyClientEngine extends ClientEngine {
 
     constructor(gameEngine, options) {
         super(gameEngine, options, MyRenderer);
-        //this.controls = new KeyboardControls(this);
-        //this.controls.bindKey('left', 'left', { repeat: true });
-        //this.controls.bindKey('right', 'right', { repeat: true });
-        //this.controls.bindKey('up', 'up', { repeat: true } );
-        //this.controls.bindKey('space', 'space');
-        //this.controls.on('fire', () => {
-            //this.sendInput('space');
-        //});
     }
     
     start() {
         super.start();
-        console.log("client engine!");
+        //console.log("client engine!");
 
         // handle gui for game condition
         this.gameEngine.on('objectDestroyed', (obj) => {
@@ -37,22 +29,16 @@ export default class MyClientEngine extends ClientEngine {
             }
         });
 
-        this.gameEngine.once('rendererphaser', () => {
-            console.log("rendererphaser!");
-        });
-        //this.gameEngine.emit('rendererphaser');
-
+        //This handle UI add listener controls and html buttons.
         this.gameEngine.once('renderer.ready', () => {
-            console.log("Renderer Ready!");
+            //console.log("Renderer Ready!");
             // click event for "try again" button
-            
             document.querySelector('#tryAgain').addEventListener('click', () => {
                 if (Utils.isTouchDevice()){
                     this.renderer.enableFullScreen();
                 }
                 this.socket.emit('requestRestart');
             });
-            
             
             document.querySelector('#joinGame').addEventListener('click', (clickEvent) => {
                 if (Utils.isTouchDevice()){
@@ -63,7 +49,6 @@ export default class MyClientEngine extends ClientEngine {
                 this.socket.emit('requestRestart');
                 console.log("join game?");
             });
-            
             
             document.querySelector('#reconnect').addEventListener('click', () => {
                 window.location.reload();
@@ -87,13 +72,14 @@ export default class MyClientEngine extends ClientEngine {
             });
 
         });
-        
+        //play sound when user fire missle
         this.gameEngine.on('fireMissile', () => { 
             if(this.renderer.scene){
                 //console.log(this.renderer.scene);
                 this.renderer.scene.soundFX_lasergun.play();
             }
         });
+        //play sound when ship is hit event
         this.gameEngine.on('missileHit', () => {
             // don't play explosion sound if the player is not in game
             if (this.renderer.playerShip) {
@@ -102,7 +88,7 @@ export default class MyClientEngine extends ClientEngine {
                 }
             }
         });
-
+        //this update ping to server lag rate
         this.networkMonitor.on('RTTUpdate', (e) => {
             this.renderer.updateHUD(e);
         });
@@ -111,6 +97,7 @@ export default class MyClientEngine extends ClientEngine {
     // extend ClientEngine connect to add own events
     connect() {
         return super.connect().then(() => {
+            //this update ship data score UI
             this.socket.on('scoreUpdate', (e) => {
                 this.renderer.updateScore(e);
             });

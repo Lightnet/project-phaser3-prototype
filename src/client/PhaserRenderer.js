@@ -15,9 +15,9 @@ import Renderer from 'lance/render/Renderer';
 
 export default class PhaserRenderer extends Renderer {
 
-    get ASSETPATHS() {
-        return {};
-    }
+    //get ASSETPATHS() {
+        //return {};
+    //}
 
     constructor(gameEngine, clientEngine) {
         super(gameEngine, clientEngine);
@@ -58,25 +58,11 @@ export default class PhaserRenderer extends Renderer {
         //super.draw(t, dt);
     //}
 
-    addObject(obj) {
-        super.addObject(obj);
-        //if (obj.hasComponent(PixiRenderableComponent)){
-            //let renderable = obj.getComponent(PixiRenderableComponent);
-            //let sprite = this.sprites[obj.id] = renderable.createRenderable();
-            //sprite.anchor.set(0.5, 0.5);
-            //sprite.position.set(obj.position.x, obj.position.y);
-            //this.layers.base.addChild(sprite);
-        //}
-    }
+    //addObject(obj) {
+        //super.addObject(obj);
+    //}
 
-    removeObject(obj) {
-        super.removeObject(obj);
-        //if (obj.hasComponent(PixiRenderableComponent)){
-            //let sprite = this.sprites[obj.id];
-            //if (sprite) {
-                //this.sprites[obj.id].destroy();
-                //delete this.sprites[obj.id];
-            //}
-        //}
-    }
+    //removeObject(obj) {
+        //super.removeObject(obj);
+    //}
 }

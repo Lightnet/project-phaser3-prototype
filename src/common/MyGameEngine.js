@@ -1,8 +1,6 @@
 'use strict';
 
 import TwoVector from 'lance/serialize/TwoVector';
-//import Paddle from './Paddle';
-//import Ball from './Ball';
 
 import Ship from './Ship';
 import Missile from './Missile';
@@ -93,7 +91,7 @@ export default class MyGameEngine extends GameEngine {
             } else if (inputData.input == 'left') {
                 playerShip.isRotatingLeft = true;
             } else if (inputData.input == 'space') {
-                console.log("fire missile");
+                //console.log("fire missile");
                 this.makeMissile(playerShip, inputData.messageIndex);
                 this.emit('fireMissile');
             }

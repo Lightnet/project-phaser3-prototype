@@ -14,11 +14,6 @@ export default class Ship extends DynamicObject {
         this.showThrust = 0;
         this.isBot = false;
         this.angle = 0;
-        //console.log("options");
-        //console.log(options);
-        //console.log(props);
-        //console.log(this.position);
-        //console.log(this);
     }
 
     get maxSpeed() { return 3.0; }
@@ -30,10 +25,6 @@ export default class Ship extends DynamicObject {
             let sprite = shipActor.sprite;
             renderer.sprites[this.id] = sprite;
             sprite.id = this.id;
-            //console.log(sprite);
-            //sprite.position.set(this.position.x, this.position.y);
-            //sprite.setX(this.position.x);
-            //sprite.setY(this.position.y);
 
             if (gameEngine.isOwnedByPlayer(this)) {
                 renderer.addPlayerShip(sprite);
@@ -65,11 +56,11 @@ export default class Ship extends DynamicObject {
                 if (sprite.actor) {
                     // removal "takes time"
                     sprite.actor.destroy().then(()=>{
-                        console.log('deleted sprite actor');
+                        //console.log('deleted sprite actor');
                         delete renderer.sprites[this.id];
                     });
                 } else {
-                    console.log('deleted sprite');
+                    //console.log('deleted sprite');
                     sprite.destroy();
                     delete renderer.sprites[this.id];
                 }

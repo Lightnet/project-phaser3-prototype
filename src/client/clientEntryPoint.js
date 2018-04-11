@@ -1,5 +1,3 @@
-//console.log("game client!");
-
 //import '../../assets/sass/main.scss';
 
 import querystring from 'query-string';
@@ -26,20 +24,10 @@ let options = Object.assign(defaults, qsOptions);
 
 // create a client engine and a game engine
 const gameEngine = new MyGameEngine(options);
-//const renderer = new MyRenderer(gameEngine);
-//const clientEngine = new MyClientEngine(gameEngine, options, renderer);
 const clientEngine = new MyClientEngine(gameEngine, options);
 
+//listen document load event to start game renderer and connection.
 document.addEventListener('DOMContentLoaded', function(e){
-    
-    clientEngine.start();
-    //renderer.start();
-
-    gameEngine.once('gamestart',()=>{
-        console.log("init connect!");
-        //renderer.getCurrentCamera();
-        //clientEngine.start();
-    });
-    
+    clientEngine.start();    
 });
 

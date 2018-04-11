@@ -25,6 +25,7 @@ export default class MyRenderer extends Renderer {
         //Phaser config game 
         //this.config = {};
         this.scene = null;
+        this.camera = {x:0,y:0}; //place holder
         this.bgPhaseX = 0;
         this.bgPhaseY = 0;
 
@@ -45,8 +46,6 @@ export default class MyRenderer extends Renderer {
                 create: this.create
             }
         };
-        //console.log(this);
-        //this.gameEngine.emit('renderer.ready');
     }
 
     init() {
@@ -60,6 +59,7 @@ export default class MyRenderer extends Renderer {
         this.viewportWidth = 800;
         this.viewportHeight = 600;
 
+        //Trigger when the phaser scene create is loaded and setup ui
         this.gameEngine.once('scenebootready', () => {
             console.log("scenebootready!");
             this.setReady();
@@ -67,59 +67,40 @@ export default class MyRenderer extends Renderer {
             window.addEventListener('resize', ()=>{ 
                 this.setRendererSize(); 
             });
-            this.resizeApp();
+            this.setRendererSize();
         });
 
         this.initPromise = new Promise((resolve, reject)=>{
             let onLoadComplete = () => {
                 //this.isReady = true;
                 resolve();
-                console.log("finished loading...");
+                //console.log("finished loading...");
             };
 
-            //This will help load texture correctly
+            //This will help load texture correctly with in initPromise 
             this.config.scene.create = function() {
                 let render = MyRenderer.getInstance();
-                render.gameEngine.emit('scenebootready');
-
+                render.gameEngine.emit('scenebootready');//trigger setup and ui assign listener. 
+                //setup audio
                 this.soundFX_projectilehit = this.sound.add("projectilehit");
                 this.soundFX_lasergun = this.sound.add("lasergun");
 
-                //this.add.image(400, 300, 'sky');
-
-                //this.add.group({ key: 'sky', frameQuantity: 300 });
-                //this.background = this.add.tileSprite(0, 0, 800, 600, 'sky');
                 this.background = this.add.tileSprite(0, 0, 800, 600, 'space');
-
-                //this.background = this.add.tileSprite(0, 0, 3000, 3000, 'space');
-                console.log(this.background);
-                console.log(this.add);
-                console.log(this.cameras.main);
                 onLoadComplete();
             }
 
             this.game = new Phaser.Game(this.config);
-            console.log("initPromise");
-            //console.log(this.game);
-            //onLoadComplete();
+            //console.log("initPromise");
         });
         
         return this.initPromise;
     }
 
+    // Resize
     setRendererSize() {
         //this.viewportWidth = window.innerWidth;
         //this.viewportHeight = window.innerHeight;
-        console.log("resize");
-        this.resizeApp();
-    }
-
-    // Resize
-    resizeApp(){
-	    //var div = document.getElementById('phaser-app');
-	    //div.style.width = window.innerHeight * 0.6;
-        //div.style.height = window.innerHeight;
-
+        //console.log("resize");
         var guiContainer = document.querySelector("#guiContainer");
         
         var canvas = document.querySelector("canvas");
@@ -150,19 +131,14 @@ export default class MyRenderer extends Renderer {
         this.load.audio("projectilehit","assets/audio/193429__unfa__projectile-hit.mp3");
         this.load.audio("lasergun","assets/audio/248293__chocobaggy__weird-laser-gun.mp3");
 
-
         this.load.image('ship', 'assets/sprites/asteroids_ship.png');
-
         this.load.image('shot', 'assets/shot.png');
-
         this.load.image('sky', 'assets/skies/space3.png');
         this.load.image('space', 'assets/skies/space4.png');
         this.load.image('logo', 'assets/sprites/phaser3-logo.png');
         this.load.image('red', 'assets/particles/red.png');
-
         this.load.image('smokeparticle', 'assets/smokeparticle.png');
     }
-
 
     setReady(){
         this.getCurrentCamera();
@@ -171,16 +147,8 @@ export default class MyRenderer extends Renderer {
     }
 
     //Phaser
-    create(){ //not sure here
+    create(){ //not used here
         //let render = MyRenderer.getInstance();
-        //render.getCurrentCamera();
-        //render.isReady = true;
-        //render.gameEngine.emit('renderer.ready');
-        //render.gameEngine.emit('scenebootready');
-        //console.log(render.gameEngine);
-        //this.setReady();
-        //console.log("create");
-        //console.log(this);
         //this.add.image(400, 300, 'sky');
         /*
         var particles = this.add.particles('red');
@@ -203,9 +171,9 @@ export default class MyRenderer extends Renderer {
         
     }
 
+    //client connection update and objects sync
     draw(t, dt) {
         super.draw(t, dt);
-        //console.log("draw?");
 
         let now = Date.now();
 
@@ -220,6 +188,7 @@ export default class MyRenderer extends Renderer {
         let viewportSeesTopBound = this.camera.y > 0;
         let viewportSeesBottomBound = this.camera.y < this.viewportHeight - worldHeight;
 
+        //objects sync
         for (let objId of Object.keys(this.sprites)) {
             let objData = this.gameEngine.world.objects[objId];
             let sprite = this.sprites[objId];
@@ -236,6 +205,7 @@ export default class MyRenderer extends Renderer {
                     this.updateOffscreenIndicator(objData);
                 }
 
+                //update sprite object from client object position
                 sprite.x = objData.position.x;
                 sprite.y = objData.position.y;
 
@@ -263,11 +233,10 @@ export default class MyRenderer extends Renderer {
                     sprite.y = objData.position.y + worldHeight;
                 }
                 
-                
             }
 
             if (sprite) {
-                // object is either a Pixi sprite or an Actor. Actors have renderSteps
+                // object is either a Phaser sprite or an Actor. Actors have renderSteps
                 if (sprite.actor && sprite.actor.renderStep) {
                     sprite.actor.renderStep(now - this.elapsedTime);
                 }
@@ -325,9 +294,6 @@ export default class MyRenderer extends Renderer {
         let bgOffsetX = this.bgPhaseX * worldWidth + this.camera.x;
         let bgOffsetY = this.bgPhaseY * worldHeight + this.camera.y;
 
-        //this.bg1.tilePosition.x = bgOffsetX * 0.01;
-        //this.bg1.tilePosition.y = bgOffsetY * 0.01;
-
         if (this.scene == null){
             this.scene = this.getScene();
         }
@@ -354,7 +320,7 @@ export default class MyRenderer extends Renderer {
 
     addObject(obj) {
         super.addObject(obj);
-        console.log("renderer add object");
+        //console.log("renderer add object");
         //console.log(obj);
     }
 
@@ -367,6 +333,7 @@ export default class MyRenderer extends Renderer {
         //delete this.sprites[obj.id];
     }
 
+    //this handle for current player to setup control, viewport, and ui
     addPlayerShip(sprite) {
         this.playerShip = sprite;
         
@@ -379,9 +346,6 @@ export default class MyRenderer extends Renderer {
         document.querySelector('#tryAgain').disabled = true;
         document.querySelector('#joinGame').disabled = true;
         document.querySelector('#joinGame').style.opacity = 0;
-
-        //phaser 3 camera get renderer.getCamera();
-        //this.camera.startFollow(sprite);
         
         this.gameStarted = true; // todo state shouldn't be saved in the renderer
     }
@@ -404,7 +368,6 @@ export default class MyRenderer extends Renderer {
         this.camera.y = this.viewportHeight / 2 - targetY;
         //this.cameras.main.setSize(400, 300);// from game with scene class
         //this.cameras.startFollow(clown);
-
 
         this.lookingAt.x = targetX;
         this.lookingAt.y = targetY;
@@ -555,9 +518,8 @@ export default class MyRenderer extends Renderer {
     //get current camera
     getCurrentCamera(){
         //this.camera = this.game.scene.keys['default'].cameras.main;
-
         this.camera = {x:0,y:0};
-        console.log(this.camera);
+        //console.log(this.camera);
     }
 
 }
