@@ -7,7 +7,8 @@
 import isNode from 'detect-node'
 if (!isNode) {                                                                                                                                                                                        
     //require('phaser');
-    require('phaser/dist/phaser');
+    //require('phaser/dist/phaser');
+    require('phaser/dist/phaser.min');
     //require('phaser/dist/phaser-arcade-physics');
 }
 //import 'phaser';
@@ -61,7 +62,7 @@ export default class MyRenderer extends Renderer {
 
         //Trigger when the phaser scene create is loaded and setup ui
         this.gameEngine.once('scenebootready', () => {
-            console.log("scenebootready!");
+            //console.log("scenebootready!");
             this.setReady();
 
             window.addEventListener('resize', ()=>{ 

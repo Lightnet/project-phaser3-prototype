@@ -1,15 +1,21 @@
 {
-  "presets": [
-    ["env"
-      , { "modules": false }]
-    ],
-    "plugins": [
-      ["module-resolver", {
-        "root": ["./"],
-        "alias": {
-          "lance": "./node_modules/lance-gg/es5"
-        }
-      }]
-  ]
+	"presets": [
+			["env", {
+			  "targets": {
+				"node": "current"
+			  }
+			}]
+		  ]
+	,"plugins": [["transform-runtime"]
+		,["transform-define", {
+			"process.env.NODE_ENV": "production",
+			"typeof window": "object"
+		}]
+		,["module-resolver", {
+			"root": ["./dist/src"],
+			"alias": {
+			  "lance": "../node_modules/lance-gg/es5"
+			}
+		  }]
+	]
 }
-  

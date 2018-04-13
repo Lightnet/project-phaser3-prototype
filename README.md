@@ -1,6 +1,3 @@
-
-
-
 # project-phaser3-prototype
 
 # License: MIT
@@ -8,16 +5,18 @@
 Created by: Lightnet
 
 # Information:
- Simple prototype for running Phaser 3.3.0 on Lance-gg 2.0.5 nodejs multiplayer. Working on project template build.
+ Simple prototype for running Phaser 3.4.0 on Lance-gg 2.0.5 nodejs multiplayer. Working on project template build.
 
- Not sure if Phaser physics server side for nodejs hasn't been tested yet. Lance-gg network has 2D collision server side. Note it may required different way to code it since render the game for Phaser doesn't work on server nodejs since it required window and other objects to run headless is not possible. (It is possible but it required more R&D using more packages.)
+ Porting [spaace](https://github.com/lance-gg/spaaace) Pixi.js > Phaser 3.4.0 Frameworks.
 
- Porting [spaace](https://github.com/lance-gg/spaaace) Pixi.js > Phaser 3.3.0 Frameworks.
+ Phaser 3.x.x Physics on server will not work since it required browser variables and functions to work. By using simple basic collision 2D on server and client as well to test collision running. Note physics will run on client and server for sync. Read more information on [lance-gg](http://lance.gg/) for multiplayer.
+
+ For more 2D physics features would be using [matter.js](http://brm.io/matter-js/) since it can run client and server side node. Another project link to run Phaser 3.4.0 with matter.js physics 2D.
+
+ [Project Phaser3 Matter.js](https://github.com/Lightnet/project-phaser3-matterjs)
 
 # Notes:
- * Some files are from Phaser 3.3.0 and Lance-gg Github Examples for testing.
- * Phaser 3.3.0 physics server code have not yet work or tested to sync with client and server node of other framework engines.
- * Testing seem slow if bundle.js file is taking long time for chrome.
+ * Some files are from Phaser 3.4.0 and Lance-gg Github Examples for testing.
  * Work in progress.
 
 # Browser notes:
@@ -27,7 +26,7 @@ Created by: Lightnet
 # Packages / Programs:
  * Viusal Studio Code 1.22.1 (IDE)
  * Nodejs 8.11.1 (run server and auto build script with gulp)
- * Phaser 3.3.0 (Note this is typescript and javascript from package npm)
+ * Phaser 3.4.0 (Note this is typescript and javascript from package npm)
  * Babel 6.26.0 (gulp auto build script for server and browser)
  * Gulp 3.9.1 (auto task build scripts)
  * Lance-gg 2.0.5 (Multiplayer Network for client and server engine or framework design)

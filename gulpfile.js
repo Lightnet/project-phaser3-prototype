@@ -37,27 +37,7 @@ gulp.task('build',['main-script','src-server-script','scr-client-build'],functio
 gulp.task('main-script', function () {
     return gulp.src(['main.js'])
     .pipe(debug({title: 'Building main script node >> '}))
-    .pipe(babel({
-        "presets": [
-                ["env", {
-                  "targets": {
-                    "node": "current"
-                  }
-                }]
-              ]
-        ,"plugins": ["transform-runtime"
-            ,["transform-define", {
-                "process.env.NODE_ENV": "production",
-                "typeof window": "object"
-            }]
-            ,["module-resolver", {
-                "root": ["./"],
-                "alias": {
-                    "lance": "../node_modules/lance-gg/es5"
-                }
-              }]
-        ]
-    }))
+    .pipe(babel())
     .pipe(gulp.dest('dist'));
 });
 
@@ -65,27 +45,7 @@ gulp.task('main-script', function () {
 gulp.task('src-server-script', function () {
     return gulp.src(['./src/**/*.js','!src/client/clientEntryPoint.js'])//,'!src/client/*.js'])
     .pipe(debug({title: 'Building server script node >> '}))
-    .pipe(babel({
-        "presets": [
-                ["env", {
-                  "targets": {
-                    "node": "current"
-                  }
-                }]
-              ]
-        ,"plugins": [["transform-runtime"]
-            ,["transform-define", {
-                "process.env.NODE_ENV": "production",
-                "typeof window": "object"
-            }]
-            ,["module-resolver", {
-                "root": ["./dist/src"],
-                "alias": {
-                  "lance": "../node_modules/lance-gg/es5"
-                }
-              }]
-        ]
-    }))
+    .pipe(babel())
     .pipe(gulp.dest('dist/src'));
 });
 
@@ -102,9 +62,9 @@ gulp.task('scr-client-build',  function(cb) {
         "babelrc": false,
         "presets": [
                 ["env", {
-                  "targets": {
-                    "node": "current"
-                  }
+                  //"targets": {
+                    //"node": "current"
+                  //}
                 }]
               ]
         ,"plugins": [["transform-runtime"]

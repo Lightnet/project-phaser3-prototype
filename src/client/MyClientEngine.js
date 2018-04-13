@@ -47,7 +47,7 @@ export default class MyClientEngine extends ClientEngine {
                 console.log(clickEvent.currentTarget)
                 clickEvent.currentTarget.disabled = true;
                 this.socket.emit('requestRestart');
-                console.log("join game?");
+                //console.log("join game?");
             });
             
             document.querySelector('#reconnect').addEventListener('click', () => {
