@@ -7,7 +7,8 @@
 import isNode from 'detect-node'
 if (!isNode) {                                                                                                                                                                                        
     //require('phaser');
-    require('phaser/dist/phaser');
+    //require('phaser/dist/phaser');
+    require('phaser/dist/phaser.min');
     //require('phaser/dist/phaser-arcade-physics');
 }
 //import 'phaser';

@@ -15,7 +15,8 @@ export default class ShipActor {
 
     addThrustEmitter(){
         //console.log("==============================================");
-        this.thrustEmitter = this.gameEngine.renderer.scene.add.particles('red').createEmitter({
+        this.thrustparticles = this.gameEngine.renderer.scene.add.particles('red');
+        this.thrustEmitter = this.thrustparticles.createEmitter({
             //blendMode: 'SCREEN'
             scale: { start: 0.05, end: 0 },
             speed: { min: 200, max: 400 },
@@ -25,7 +26,8 @@ export default class ShipActor {
         this.thrustEmitter.emit = false;
 
         //console.log(this.thrustEmitter);
-        this.explosionEmitter = this.gameEngine.renderer.scene.add.particles('smokeparticle').createEmitter({
+        this.explosionparticles = this.gameEngine.renderer.scene.add.particles('smokeparticle');
+        this.explosionEmitter = this.explosionparticles.createEmitter({
             //blendMode: 'SCREEN',
             //active: false,
             //scale: { start: 0.05, end: 0 },
@@ -74,13 +76,15 @@ export default class ShipActor {
             if (this.nameText) this.nameText.destroy();
             this.explosionEmitter.explode();
             this.sprite = null;
-            this.thrustEmitter = null;
-            this.thrustEmitter = null;
+            
             //delay to be remove from scene
             setTimeout(()=>{
-                if (this.thrustEmitter) this.thrustEmitter.killAll().destroy();
+                if (this.thrustparticles) this.thrustparticles.destroy();
+                if (this.explosionparticles) this.explosionparticles.destroy();
                 this.explosionEmitter.killAll();
 
+                this.thrustparticles = null;
+                this.explosionparticles = null;
                 this.thrustEmitter = null;
                 this.explosionEmitter = null;
                 //console.log("delay delete ship sprite!");

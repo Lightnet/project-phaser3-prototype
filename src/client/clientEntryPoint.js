@@ -4,7 +4,9 @@ import querystring from 'query-string';
 import MyClientEngine from '../client/MyClientEngine';
 import MyGameEngine from '../common/MyGameEngine';
 
-import MyRenderer from './MyRenderer';
+//import PhaserPhysicsEngine from '../common/PhaserPhysicsEngine';
+//import p2PhysicsEngine from '../common/p2PhysicsEngine';
+import matterPhysicsEngine from '../common/matterPhysicsEngine';
 const qsOptions = querystring.parse(location.search);
 
 // default options, overwritten by query-string options
@@ -28,6 +30,17 @@ const clientEngine = new MyClientEngine(gameEngine, options);
 
 //listen document load event to start game renderer and connection.
 document.addEventListener('DOMContentLoaded', function(e){
-    clientEngine.start();    
+    clientEngine.start();
+
+    //let physics = new PhaserPhysicsEngine({gameEngine:gameEngine});
+    //let physics = new p2PhysicsEngine({gameEngine:gameEngine});
+    //physics.step(0,null);
+
+    let physics = new matterPhysicsEngine({gameEngine:gameEngine});
+    physics.step(0,null);
+
+    
+
+    console.log(physics);
 });
 
